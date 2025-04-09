@@ -1,21 +1,51 @@
-# sdx-end-to-end-tests
-SDX End to End tests
+# sdx-e2e-automation
 
-The AtlanticWave-SDX end-to-end tests are being developed at AMPATH to leverage AMPATH's Gitlab runners and environment. Once tests are created, we will move the environment to Github actions. Please contact the FIU SDX team in case you need access to the end-to-end tests. For now, the pipeline definition is defined at gitlab-ci.yml on FIU's Gitlab instance. All tests and setup scripts are based on this repo. Thus:
-- If you need to change the pipeline execution steps/script, that have to be done at FIU's GitLab
-- If you want to change tests, environment variables, setup scripts, etc, you have to use this repo
+**End-to-End (E2E) Automation Framework for AtlanticWave-SDX**
 
-If you need to run the tests locally, you can run the following commands:
+This repository manages the automation of SDX end-to-end tests, result reporting, and GitHub Projects CI/CD integration. It is designed to extract, parse, and update test statuses from `results.xml` into GitHub Project fields.
 
-```
-docker compose up -d
-./wait-mininet-ready.sh
-docker compose exec -it mininet python3 -m pytest tests/
-```
+---
 
-After executing your tests, please clean up the environment before the next execution:
-```
-docker compose down -v
-```
+## Features
 
-(for the future, we should provide means to clean up the setup before each tests)
+- Parses JUnit-style XML test reports (`pytest --junitxml`)
+- Updates GitHub Projects V2:
+  - Test status (`Pass`, `Fail`, `Skipped`)
+  - Test reason (detailed output and traceback)
+  - Tracks `passes`, `fails`, `lastpass`, `lastfail`
+- Triggered manually or via GitHub Actions
+- Designed to integrate with containerized test environments 
+( Docker/Mininet)
+
+---
+
+## Repo Structure
+
+sdx-e2e-automation/
+update_project_from_results.py   # Core script for syncing results 
+results/  # Directory for incoming JUnit XML files 
+ results.xml  # Sample results file 
+.github/workflows/update-project.yml      # GitHub Actions workflow (manual trigger) 
+
+---
+
+## Environment Variables
+
+The script relies on the following environment variables:
+
+| Variable Name           | Description                          |
+|------------------------|--------------------------------------|
+| `GITHUB_TOKEN`         | GitHub token with project write access |
+| `GITHUB_ORG`           | GitHub organization name              |
+| `GITHUB_PROJECT_NUMBER`| Project number (not ID)               |
+
+You can export them locally:
+
+```bash
+export GITHUB_TOKEN=ghp_...
+export GITHUB_ORG=atlanticwave-sdx
+export GITHUB_PROJECT_NUMBER=16
+
+## Running the Script
+python3 update_project_from_results.py
+
