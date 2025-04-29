@@ -30,11 +30,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -53,11 +54,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -76,11 +78,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -99,11 +102,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -137,11 +141,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -160,11 +165,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -183,11 +189,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -221,11 +228,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -244,11 +252,12 @@
               "vlan_range": [
                 [
                   1,
-                  4095
+                  4094
                 ]
               ]
             }
           },
+	  "entities": [],
           "private": [
             "status"
           ]
@@ -271,7 +280,7 @@
       "residual_bandwidth": 100,
       "latency": 0,
       "packet_loss": 0,
-      "availability": 0,
+      "availability": 100,
       "status": "up",
       "state": "enabled",
       "private": [
@@ -290,7 +299,7 @@
       "residual_bandwidth": 100,
       "latency": 0,
       "packet_loss": 0,
-      "availability": 0,
+      "availability": 100,
       "status": "up",
       "state": "enabled",
       "private": [

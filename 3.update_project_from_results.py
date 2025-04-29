@@ -44,68 +44,70 @@ def graphql(query, variables=None):
 
 def get_project_info_and_items():
     query = """
-    query($org: String!, $number: Int!) {
+    query($org: String!, $number: Int!, $after: String) {
       organization(login: $org) {
         projectV2(number: $number) {
           id
-          items(first: 100) {
+          items(first: 100, after: $after) {
             nodes {
               id
               fieldValues(first: 50) {
                 nodes {
                   ... on ProjectV2ItemFieldTextValue {
                     text
-                    field {
-                      ... on ProjectV2FieldCommon {
-                        id
-                        name
-                      }
-                    }
+                    field { id name }
                   }
                   ... on ProjectV2ItemFieldSingleSelectValue {
                     name
-                    field {
-                      ... on ProjectV2FieldCommon {
-                        id
-                        name
-                      }
-                    }
+                    field { id name }
                   }
                   ... on ProjectV2ItemFieldNumberValue {
                     number
-                    field {
-                        ... on ProjectV2FieldCommon {
-                        id
-                        name
-                      }
-                    }
+                    field { id name }
                   }
                   ... on ProjectV2ItemFieldDateValue {
                     date
-                    field {
-                      ... on ProjectV2FieldCommon {
-                        id
-                        name
-                      }
-                    }
+                    field { id name }
                   }
                 }
               }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
             }
           }
         }
       }
     }
     """
-    return graphql(query, {"org": GITHUB_ORG, "number": GITHUB_PROJECT_NUMBER})
+    all_items = []
+    after = None
+    project_id = None
+
+    while True:
+        variables = {"org": GITHUB_ORG, "number": GITHUB_PROJECT_NUMBER, "after": after}
+        data = graphql(query, variables)
+        project = data["data"]["organization"]["projectV2"]
+        if project_id is None:
+            project_id = project["id"]
+
+        items_block = project["items"]
+        all_items.extend(items_block["nodes"])
+
+        page_info = items_block["pageInfo"]
+        if page_info["hasNextPage"]:
+            after = page_info["endCursor"]
+        else:
+            break
+
+    return {"id": project_id, "items": all_items}
 
 def update_project_field(project_id, item_id, field_id, value):
     mutation = """
     mutation($input: UpdateProjectV2ItemFieldValueInput!) {
       updateProjectV2ItemFieldValue(input: $input) {
-        projectV2Item {
-          id
-        }
+        projectV2Item { id }
       }
     }
     """
@@ -123,9 +125,7 @@ def update_number_field(project_id, item_id, field_id, value):
     mutation = """
     mutation($input: UpdateProjectV2ItemFieldValueInput!) {
       updateProjectV2ItemFieldValue(input: $input) {
-        projectV2Item {
-          id
-        }
+        projectV2Item { id }
       }
     }
     """
@@ -143,9 +143,7 @@ def update_single_select(project_id, item_id, field_id, option_id):
     mutation = """
     mutation($input: UpdateProjectV2ItemFieldValueInput!) {
       updateProjectV2ItemFieldValue(input: $input) {
-        projectV2Item {
-          id
-        }
+        projectV2Item { id }
       }
     }
     """
@@ -163,9 +161,7 @@ def update_date_field(project_id, item_id, field_id, value):
     mutation = """
     mutation($input: UpdateProjectV2ItemFieldValueInput!) {
       updateProjectV2ItemFieldValue(input: $input) {
-        projectV2Item {
-          id
-        }
+        projectV2Item { id }
       }
     }
     """
@@ -212,12 +208,12 @@ def parse_results(xml_file):
     return results
 
 def main():
-    data = get_project_info_and_items()
-    project_data = data["data"]["organization"]["projectV2"]
-    project_id = project_data["id"]
+    project_info = get_project_info_and_items()
+    project_id = project_info["id"]
+    items = project_info["items"]
+
     print("Resolved project ID:", project_id)
 
-    items = project_data["items"]["nodes"]
     item_map = {}
     field_ids = {}
     field_values_by_item = {}
@@ -233,8 +229,8 @@ def main():
             text = (
                 field_value.get("text")
                 or field_value.get("name")
-                or field_value.get("number")  # This allows reading number fields
-                or field_value.get("date")  # This allows reading date fields
+                or field_value.get("number")
+                or field_value.get("date")
             )
             if field_name and field_id:
                 field_ids[field_name] = field_id
@@ -250,7 +246,7 @@ def main():
         print(f"  {name}: {fid}")
 
     results = parse_results("e2e-output/results.xml")
-    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    now = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")  # ISO8601 UTC
 
     for result in results:
         name = result["name"]
@@ -266,9 +262,9 @@ def main():
 
         # Always update "date" field
         if "date" in field_ids:
-            update_project_field(project_id, item_id, field_ids["date"], now)
+            update_date_field(project_id, item_id, field_ids["date"], now)
 
-        # Update select fields if changed
+        # Update status if changed
         if old_status != status:
             print(f"UPDATE: {name} | {old_status} → {status}")
             update_single_select(project_id, item_id, field_ids["previous"],
@@ -292,7 +288,7 @@ def main():
                     count = 1
                 update_number_field(project_id, item_id, field_ids.get("fails"), count)
 
-        # Update reason field if changed
+        # Update reason if changed
         output = (
             f"Status: {status}\n"
             f"File: {result['classname'].replace('.', '/')}.py\n"

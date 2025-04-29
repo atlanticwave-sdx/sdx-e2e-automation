@@ -1,9 +1,12 @@
 import json
+import re
 import time
 from datetime import datetime, timedelta
 import uuid
+import random
 
 import pytest
+from random import randrange
 import requests
 
 from tests.helpers import NetworkTest
@@ -23,12 +26,16 @@ class TestE2EL2VPN:
     def teardown_class(cls):
         cls.net.stop()
 
+    @classmethod
+    def setup_method(cls):
+        cls.net.config_all_links_up()
+
     def test_010_list_l2vpn_empty(self):
         """Test if list all L2VPNs return empty."""
         api_url = SDX_CONTROLLER + '/l2vpn/1.0'
         response = requests.get(api_url)
-        assert response.status_code == 200, f"Expected 200 but got {response.status_code}: {response.text}"
-        assert response.json() == {}, f"Expected empty dict, got: {response.json()}"
+        assert response.status_code == 200, response.text
+        assert response.json() == {}
 
     def test_020_create_l2vpn_successfully(self):
         """Test creating a L2VPN successfully."""
@@ -36,35 +43,56 @@ class TestE2EL2VPN:
         payload = {
             "name": "Test L2VPN request 1",
             "endpoints": [
-                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50", "vlan": "300"},
-                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": "300"}
+                {
+                    "port_id": "urn:sdx:port:ampath.net:Ampath3:50",
+                    "vlan": "300",
+                },
+                {
+                    "port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50",
+                    "vlan": "300",
+                }
             ]
         }
         response = requests.post(api_url, json=payload)
-        assert response.status_code == 201, f"L2VPN creation failed: {response.text}"
+        assert response.status_code == 201, response.text
         response_json = response.json()
-        assert response_json.get("status") == "OK", f"Unexpected status: {response_json}"
+        assert response_json.get("status") == "under provisioning", response_json
         service_id = response_json.get("service_id")
-        assert service_id is not None, f"Missing service_id: {response_json}"
-
-        response = requests.get(api_url)
-        assert response.status_code == 200, response.text
-        response_json = response.json()
-        assert len(response_json) == 1, f"Expected 1 L2VPN, got {len(response_json)}: {response_json}"
-        assert service_id in response_json, f"Service ID {service_id} not found: {response_json}"
+        assert service_id != None, response_json
 
         # give enough time to SDX-Controller to propagate change to OXPs
         time.sleep(10)
 
-        # make sure OXPs have the new EVCs
-        for oxp in ["ampath", "sax", "tenet"]:
-            response = requests.get(f"http://{oxp}:8181/api/kytos/mef_eline/v2/evc/")
-            evcs = response.json()
-            assert len(evcs) == 1, f"{oxp} expected 1 EVC, got {len(evcs)}: {evcs}"
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        response_json = response.json()
+        assert len(response_json) == 1, response_json
+        assert service_id in response_json, response_json
+        assert response_json[service_id].get("status") == "up", response_json
 
-        evcs = requests.get("http://tenet:8181/api/kytos/mef_eline/v2/evc/").json()
-        found = sum(1 for evc in evcs.values() if evc.get("uni_z", {}).get("tag", {}).get("value") == 300)
-        assert found == 1, f"Expected one EVC with vlan=300 on uni_z: {evcs}"
+        # make sure OXPs have the new EVCs
+        ## -> ampath
+        response = requests.get("http://ampath:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        assert len(evcs) == 1, response.text
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_a", {}).get("tag", {}).get("value") == 300:
+                found += 1
+        assert found == 1, evcs
+        ## -> sax
+        response = requests.get("http://sax:8181/api/kytos/mef_eline/v2/evc/")
+        assert len(response.json()) == 1, response.json()
+        ## -> tenet
+        response = requests.get("http://tenet:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        assert len(evcs) == 1, response.text
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_z", {}).get("tag", {}).get("value") == 300:
+                found += 1
+        assert found == 1, evcs
 
     def test_030_create_l2vpn_with_any_vlan(self):
         """Test creating a L2VPN successfully."""
@@ -72,109 +100,189 @@ class TestE2EL2VPN:
         payload = {
             "name": "Test L2VPN request 2",
             "endpoints": [
-                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50", "vlan": "any"},
-                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": "any"}
+                {
+                    "port_id": "urn:sdx:port:ampath.net:Ampath3:50",
+                    "vlan": "any",
+                },
+                {
+                    "port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50",
+                    "vlan": "any",
+                }
             ]
         }
         response = requests.post(api_url, json=payload)
-        assert response.status_code == 201, f"Failed to create L2VPN with vlan=any: {response.text}"
+        assert response.status_code == 201, response.text
         response_json = response.json()
-        assert response_json.get("status") == "OK", f"Unexpected status: {response_json}"
+        assert response_json.get("status") == "under provisioning", response_json
         service_id = response_json.get("service_id")
-        assert service_id is not None, f"No service_id in response: {response_json}"
-
-        response = requests.get(api_url)
-        response_json = response.json()
-        assert len(response_json) == 2, f"Expected 2 L2VPNs, got {len(response_json)}: {response_json}"
-        assert service_id in response_json, f"Service ID {service_id} not found in list"
+        assert service_id != None, response_json
 
         # give enough time to SDX-Controller to propagate change to OXPs
         time.sleep(10)
 
-        for oxp in ["ampath", "sax", "tenet"]:
-            evcs = requests.get(f"http://{oxp}:8181/api/kytos/mef_eline/v2/evc/").json()
-            assert len(evcs) == 2, f"{oxp} expected 2 EVCs, got {len(evcs)}: {evcs}"
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        response_json = response.json()
+        assert len(response_json) == 2, response_json
+        assert service_id in response_json, response_json
+        assert response_json[service_id].get("status") == "up", response_json
+
+        # make sure OXPs have the new EVCs
+        ## -> ampath
+        response = requests.get("http://ampath:8181/api/kytos/mef_eline/v2/evc/")
+        assert len(response.json()) == 2, response.text
+        ## -> sax
+        response = requests.get("http://sax:8181/api/kytos/mef_eline/v2/evc/")
+        assert len(response.json()) == 2, response.text
+        ## -> tenet
+        response = requests.get("http://tenet:8181/api/kytos/mef_eline/v2/evc/")
+        assert len(response.json()) == 2, response.text
 
     def test_040_edit_vlan_l2vpn_successfully(self):
         """Test change the vlan of endpoints of an existing L2vpn connection."""
-        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
-        data = requests.get(api_url).json()
-        key = list(data.keys())[0]
-        current = data[key]
+        
+        ## -> ampath
+        response = requests.get("http://ampath:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_a", {}).get("tag", {}).get("value") == 100:
+                found += 1
+        assert found == 0, evcs
+        ## -> tenet
+        response = requests.get("http://tenet:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_z", {}).get("tag", {}).get("value") == 100:
+                found += 1
+        assert found == 0, evcs
 
+        # wait a few seconds to allow status change from UNDER_PROVISIONG to UP
+        time.sleep(5)
+
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        response = requests.get(api_url)
+        data = response.json()
+
+        # Change vlan
+        key = list(data.keys())[0]
+        current_data = data[key]  
         payload = {
             "name": "New vlan in endpoints",
             "endpoints": [
-                {"port_id": current["endpoints"][0]["port_id"], "vlan": "100"},
-                {"port_id": current["endpoints"][1]["port_id"], "vlan": "100"}
+                {
+                    "port_id": current_data["endpoints"][0]["port_id"],
+                    "vlan": "100",
+                },
+                {
+                    "port_id": current_data["endpoints"][1]["port_id"],
+                    "vlan": "100",
+                }
             ]
         }
         response = requests.patch(f"{api_url}/{key}", json=payload)
-        assert response.status_code == 201, f"Patch failed: {response.text}"
+        assert response.status_code == 201, response.text
 
-        updated = requests.get(api_url).json()[key]
-        assert updated["name"] == "New vlan in endpoints", str(updated)
-        assert updated["endpoints"][0]["vlan"] == "100", str(updated)
-        assert updated["endpoints"][1]["vlan"] == "100", str(updated)
+        response = requests.get(api_url)
+        data = response.json()
+        current_data = data[key]  
+        assert current_data["name"] == "New vlan in endpoints", str(data)
+        assert current_data["endpoints"][0]["vlan"] == "100", str(data)
+        assert current_data["endpoints"][1]["vlan"] == "100", str(data)
 
         # give enough time to SDX-Controller to propagate change to OXPs
         time.sleep(10)
 
         # make sure OXPs have the new EVCs
-        for oxp, field in [("ampath", "uni_a"), ("tenet", "uni_z")]:
-            evcs = requests.get(f"http://{oxp}:8181/api/kytos/mef_eline/v2/evc/").json()
-            found = sum(1 for evc in evcs.values() if evc.get(field, {}).get("tag", {}).get("value") == 100)
-            assert found == 1, f"{oxp} expected 1 EVC with vlan=100: {evcs}"
+
+        ## -> ampath
+        response = requests.get("http://ampath:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_a", {}).get("tag", {}).get("value") == 100:
+                found += 1
+        assert found == 1, evcs
+        ## -> tenet
+        response = requests.get("http://tenet:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_z", {}).get("tag", {}).get("value") == 100:
+                found += 1
+        assert found == 1, evcs
 
     def test_045_edit_port_l2vpn_successfully(self):
         """Test change the port_id of endpoints of an existing L2vpn connection."""
+        # wait a few seconds to allow status change from UNDER_PROVISIONG to UP
+        time.sleep(5)
+
         api_url = SDX_CONTROLLER + '/l2vpn/1.0'
-        data = requests.get(api_url).json()
+        response = requests.get(api_url)
+        data = response.json()
         key = list(data.keys())[0]
-        current = data[key]
-
-        for i in range(2):
-            assert current["endpoints"][i]["port_id"] in [
-                "urn:sdx:port:tenet.ac.za:Tenet03:50",
-                "urn:sdx:port:ampath.net:Ampath3:50"
-            ], f"Unexpected port: {current['endpoints'][i]}"
-
+        current_data = data[key]  
+        assert current_data["endpoints"][0]["port_id"] in ["urn:sdx:port:tenet.ac.za:Tenet03:50", \
+                                                           "urn:sdx:port:ampath.net:Ampath3:50"], str(data)
+        assert current_data["endpoints"][1]["port_id"] in ["urn:sdx:port:tenet.ac.za:Tenet03:50", \
+                                                           "urn:sdx:port:ampath.net:Ampath3:50"], str(data)
+            
+        # Change port_id
         payload = {
             "name": "New port_id in endpoints",
             "endpoints": [
-                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet01:41", "vlan": "100"},
-                {"port_id": "urn:sdx:port:sax.net:Sax01:40", "vlan": "100"}
+                {
+                    "port_id": "urn:sdx:port:tenet.ac.za:Tenet01:41",
+                    "vlan": "100",
+                },
+                {
+                    "port_id": "urn:sdx:port:sax.net:Sax01:40",
+                    "vlan": "100",
+                }
             ]
         }
         response = requests.patch(f"{api_url}/{key}", json=payload)
-        assert response.status_code == 201, f"Port patch failed: {response.text}"
+        assert response.status_code == 201, response.text
 
-        archived = requests.get(api_url + f'/{key}/archived').json()[key]
-        assert archived["current_path"][0]["port_id"] == "urn:sdx:port:tenet.ac.za:Tenet01:41", str(archived)
-        assert archived["current_path"][-1]["port_id"] == "urn:sdx:port:sax.net:Sax01:40", str(archived)
+        response = requests.get(api_url + f'/{key}/archived')
+        data = response.json()
+        current_data = data[key] 
+        assert current_data["current_path"][0]["port_id"] == "urn:sdx:port:tenet.ac.za:Tenet01:41", str(data)
+        assert current_data["current_path"][-1]["port_id"] == "urn:sdx:port:sax.net:Sax01:40", str(data)
 
     def test_050_delete_l2vpn_successfully(self):
         """Test deleting all two L2VPNs successfully."""
         api_url = SDX_CONTROLLER + '/l2vpn/1.0'
-        data = requests.get(api_url).json()
-        assert len(data) == 2, f"Expected 2 services before delete, got {len(data)}"
+        response = requests.get(api_url)
+        data = response.json()
+        assert len(data) == 2, str(data)
 
+        # Delete all L2VPN
         for key in data:
             response = requests.delete(f"{api_url}/{key}")
-            assert response.status_code == 200, f"Delete failed for {key}: {response.text}"
+            assert response.status_code == 200, response.text
 
         # give enough time to SDX-Controller to propagate change to OXPs
         time.sleep(10)
 
+        # make sure the L2VPNs were deleted from SDX-Controller
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
         response = requests.get(api_url)
-        assert len(response.json()) == 0, f"L2VPNs not cleared: {response.json()}"
-
+        data = response.json()
+        assert len(data) == 0, str(data)
         # make sure OXPs also had their EVC deleted
-        for oxp in ["ampath", "sax", "tenet"]:
-            evcs = requests.get(f"http://{oxp}:8181/api/kytos/mef_eline/v2/evc/").json()
-            assert len(evcs) == 0, f"{oxp} still has EVCs: {evcs}"
+        ## -> ampath
+        response = requests.get("http://ampath:8181/api/kytos/mef_eline/v2/evc/")
+        assert len(response.json()) == 0, response.text
+        ## -> sax
+        response = requests.get("http://sax:8181/api/kytos/mef_eline/v2/evc/")
+        assert len(response.json()) == 0, response.text
+        ## -> tenet
+        response = requests.get("http://tenet:8181/api/kytos/mef_eline/v2/evc/")
+        assert len(response.json()) == 0, response.text
 
-    @pytest.mark.xfail(reason="AssertionError: assert ', 0% packet loss, ... 100% packet loss,...'")
     def test_060_link_convergency_with_l2vpn_with_alternative_paths(self):
         """
         Test a simple link convergency with L2VPNs that have alternative paths:
@@ -185,48 +293,214 @@ class TestE2EL2VPN:
         - test connectivity again
         """
         api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        
+        payload = {"name": "Text",
+                   "endpoints": [
+                       {"port_id": "urn:sdx:port:ampath.net:Ampath1:50", "vlan": "100"},
+                       {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": "100"}
+                    ]
+        }
+        response = requests.post(api_url, json=payload)
+        assert response.status_code == 201, response.text
         h1, h8 = self.net.net.get('h1', 'h8')
+        h1.cmd('ip link add link %s name vlan100 type vlan id 100' % (h1.intfNames()[0]))
+        h1.cmd('ip link set up vlan100')
+        h1.cmd('ip addr add 10.1.1.1/24 dev vlan100')
+        h8.cmd('ip link add link %s name vlan100 type vlan id 100' % (h8.intfNames()[0]))
+        h8.cmd('ip link set up vlan100')
+        h8.cmd('ip addr add 10.1.1.8/24 dev vlan100')
 
-        def setup_vlan(vlan, ip1, ip8):
-            payload = {
-                "name": f"VLAN {vlan}",
-                "endpoints": [
-                    {"port_id": "urn:sdx:port:ampath.net:Ampath1:50", "vlan": str(vlan)},
-                    {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": str(vlan)}
-                ]
-            }
-            response = requests.post(api_url, json=payload)
-            assert response.status_code == 201, f"L2VPN setup failed: {response.text}"
-            h1.cmd(f"ip link add link {h1.intfNames()[0]} name vlan{vlan} type vlan id {vlan}")
-            h1.cmd(f"ip link set up vlan{vlan}")
-            h1.cmd(f"ip addr add {ip1}/24 dev vlan{vlan}")
-            h8.cmd(f"ip link add link {h8.intfNames()[0]} name vlan{vlan} type vlan id {vlan}")
-            h8.cmd(f"ip link set up vlan{vlan}")
-            h8.cmd(f"ip addr add {ip8}/24 dev vlan{vlan}")
+        payload = {"name": "Text",
+                   "endpoints": [
+                       {"port_id": "urn:sdx:port:ampath.net:Ampath1:50", "vlan": "101"},
+                       {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": "101"}
+                    ]
+        }
+        response = requests.post(api_url, json=payload)
+        assert response.status_code == 201, response.text
+        h1.cmd('ip link add link %s name vlan101 type vlan id 101' % (h1.intfNames()[0]))
+        h1.cmd('ip link set up vlan101')
+        h1.cmd('ip addr add 10.1.2.1/24 dev vlan101')
+        h8.cmd('ip link add link %s name vlan101 type vlan id 101' % (h8.intfNames()[0]))
+        h8.cmd('ip link set up vlan101')
+        h8.cmd('ip addr add 10.1.2.8/24 dev vlan101')
 
-        setup_vlan(100, "10.1.1.1", "10.1.1.8")
-        setup_vlan(101, "10.1.2.1", "10.1.2.8")
-        setup_vlan(102, "10.1.3.1", "10.1.3.8")
+        payload = {"name": "Text",
+                   "endpoints": [
+                       {"port_id": "urn:sdx:port:ampath.net:Ampath1:50", "vlan": "102"},
+                       {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": "102"}
+                    ]
+        }
+        response = requests.post(api_url, json=payload)
+        assert response.status_code == 201, response.text
+        h1.cmd('ip link add link %s name vlan102 type vlan id 102' % (h1.intfNames()[0]))
+        h1.cmd('ip link set up vlan102')
+        h1.cmd('ip addr add 10.1.3.1/24 dev vlan102')
+        h8.cmd('ip link add link %s name vlan102 type vlan id 102' % (h8.intfNames()[0]))
+        h8.cmd('ip link set up vlan102')
+        h8.cmd('ip addr add 10.1.3.8/24 dev vlan102')
 
-        def ping(ip): return h1.cmd(f'ping -c4 {ip}')
-        result_100 = ping("10.1.1.8")
-        result_101 = ping("10.1.2.8")
-        result_102 = ping("10.1.3.8")
+        # wait a few seconds to allow OXPs to deploy the L2VPNs
+        time.sleep(10)
 
+        # test connectivity
+        result_100 = h1.cmd('ping -c4 10.1.1.8')
+        result_101 = h1.cmd('ping -c4 10.1.2.8')
+        result_102 = h1.cmd('ping -c4 10.1.3.8')
+
+        # set one link to down
         self.net.net.configLinkStatus('Ampath1', 'Sax01', 'down')
+
+        # wait a few seconds for convergency
         time.sleep(15)
 
-        result_100_2 = ping("10.1.1.8")
-        result_101_2 = ping("10.1.2.8")
-        result_102_2 = ping("10.1.3.8")
+        # test connectivity again
+        result_100_2 = h1.cmd('ping -c4 10.1.1.8')
+        result_101_2 = h1.cmd('ping -c4 10.1.2.8')
+        result_102_2 = h1.cmd('ping -c4 10.1.3.8')
 
-        for vlan in [100, 101, 102]:
-            h1.cmd(f"ip link del vlan{vlan}")
-            h8.cmd(f"ip link del vlan{vlan}")
+        # clean up
+        h1.cmd('ip link del vlan100')
+        h1.cmd('ip link del vlan101')
+        h1.cmd('ip link del vlan102')
+        h8.cmd('ip link del vlan100')
+        h8.cmd('ip link del vlan101')
+        h8.cmd('ip link del vlan102')
 
         assert ', 0% packet loss,' in result_100
         assert ', 0% packet loss,' in result_101
         assert ', 0% packet loss,' in result_102
-        assert ', 0% packet loss,' in result_100_2
-        # expected fail: result_101_2 and result_102_2
 
+        assert ', 0% packet loss,' in result_100_2
+        assert ', 0% packet loss,' in result_101_2
+        assert ', 0% packet loss,' in result_102_2
+
+
+    def test_070_multiple_l2vpn_with_bandwidth_qos_metric(self):
+        """
+        Test the creation of multiple L2VPNs with Bandwidth QoS Metrics
+        in a way that will consume all possible residual bandwidth, then
+        check if new L2VPNs with BW requirements wont be accepted, check if
+        new L2VPNs without BW requirements will be acesspted and finally
+        run connectivity tests on the provisioned L2VPNs
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        base_vlan = 300
+        count = 0
+        request_pairs = [
+            ("ampath.net:Ampath3:50",  "tenet.ac.za:Tenet01:50"),
+            ("ampath.net:Ampath3:50",  "tenet.ac.za:Tenet01:50"),
+            ("ampath.net:Ampath1:50",  "ampath.net:Ampath2:50"),
+            ("sax.net:Sax01:50",       "sax.net:Sax02:50"),
+            ("tenet.ac.za:Tenet01:50", "tenet.ac.za:Tenet03:50"),
+        ]
+        uni2host = {
+            "ampath.net:Ampath1:50": "h1",
+            "ampath.net:Ampath2:50": "h2",
+            "ampath.net:Ampath3:50": "h3",
+            "sax.net:Sax01:50": "h4",
+            "sax.net:Sax02:50": "h5",
+            "tenet.ac.za:Tenet01:50": "h6",
+            "tenet.ac.za:Tenet02:50": "h7",
+            "tenet.ac.za:Tenet03:50": "h8",
+        }
+        # first of all: make sure we have a clean environment
+        data = requests.get(api_url).json()
+        for l2vpn in data.keys():
+            requests.delete(f"{api_url}/{l2vpn}")
+
+        # wait until all L2VPNs are removed
+        for i in range(30):
+            data = requests.get(api_url).json()
+            if len(data) == 0:
+                break
+            time.sleep(2)
+        else:
+            assert False, f"Timeout waiting for L2VPN removal. {data=}"
+
+        # give a few seconds so that SDX-Controller can update link properties
+        time.sleep(10)
+
+        # case 1: first we make requests that will consume 90% of the link capacity
+        for unia, uniz in request_pairs:
+            vlan_id = base_vlan + count
+            payload = {"name": f"VLAN--{vlan_id}--{unia}--{uniz}",
+                "endpoints": [
+                    {"port_id": f"urn:sdx:port:{unia}", "vlan": str(vlan_id)},
+                    {"port_id": f"urn:sdx:port:{uniz}", "vlan": str(vlan_id)}
+                ],
+                "qos_metrics": {"min_bw": {"value": 9}},
+            }
+            response = requests.post(api_url, json=payload)
+            assert response.status_code == 201, f"{payload=} {response.text=}"
+            count += 1
+
+        # case 2: then we make requests that will consume the remaining 10% of the link BW
+        for unia, uniz in request_pairs:
+            vlan_id = base_vlan + count
+            payload = {"name": f"VLAN--{vlan_id}--{unia}--{uniz}",
+                "endpoints": [
+                    {"port_id": f"urn:sdx:port:{unia}", "vlan": str(vlan_id)},
+                    {"port_id": f"urn:sdx:port:{uniz}", "vlan": str(vlan_id)}
+                ],
+                "qos_metrics": {"min_bw": {"value": 1}},
+            }
+            response = requests.post(api_url, json=payload)
+            assert response.status_code == 201, f"{payload=} {response.text=}"
+            count += 1
+
+        # case 3: now all requests, no matter how much BW we request, should fail
+        for unia, uniz in request_pairs:
+            vlan_id = base_vlan + count
+            payload = {"name": f"VLAN--{vlan_id}--{unia}--{uniz}",
+                "endpoints": [
+                    {"port_id": f"urn:sdx:port:{unia}", "vlan": str(vlan_id)},
+                    {"port_id": f"urn:sdx:port:{uniz}", "vlan": str(vlan_id)}
+                ],
+                "qos_metrics": {"min_bw": {"value": random.randint(1,10)}},
+            }
+            response = requests.post(api_url, json=payload)
+            assert response.status_code == 410, f"{payload=} {response.text=}"
+
+        # case 4: on the other hand, requests without BW requirements should be okay
+        for unia, uniz in request_pairs:
+            vlan_id = base_vlan + count
+            payload = {"name": f"VLAN--{vlan_id}--{unia}--{uniz}",
+                "endpoints": [
+                    {"port_id": f"urn:sdx:port:{unia}", "vlan": str(vlan_id)},
+                    {"port_id": f"urn:sdx:port:{uniz}", "vlan": str(vlan_id)}
+                ],
+            }
+            response = requests.post(api_url, json=payload)
+            assert response.status_code == 201, f"{payload=} {response.text=}"
+            count += 1
+
+        # wait for all L2VPNs to be UP
+        for i in range(30):
+            data = requests.get(api_url).json()
+            if all([l2vpn["status"] == "up" for l2vpn in data.values()]):
+                break
+            time.sleep(3)
+        else:
+            assert False, f"Timeout waiting for L2VPN converge. {data=}"
+
+        # wait a couple of seconds to SDX-Controller propagate changes
+        time.sleep(10)
+
+        vlan_inc = 0
+        for unia, uniz in request_pairs:
+            for i in range(3):  # 3 success cases to test
+                vlan_id = base_vlan + vlan_inc + i*len(request_pairs)
+                hostA, hostZ = self.net.net.get(uni2host[unia], uni2host[uniz])
+                hostA.cmd(f"ip link add link {hostA.intfNames()[0]} name vlan{vlan_id} type vlan id {vlan_id}")
+                hostA.cmd(f"ip link set up vlan{vlan_id}")
+                hostA.cmd(f"ip addr add 2001:db8:ffff:{vlan_id}::1/64 dev vlan{vlan_id}")
+                hostZ.cmd(f"ip link add link {hostZ.intfNames()[0]} name vlan{vlan_id} type vlan id {vlan_id}")
+                hostZ.cmd(f"ip link set up vlan{vlan_id}")
+                hostZ.cmd(f"ip addr add 2001:db8:ffff:{vlan_id}::2/64 dev vlan{vlan_id}")
+                # run first ping just to learn mac
+                hostA.cmd(f"ping6 -c1 2001:db8:ffff:{vlan_id}::2 2>&1 >/dev/null")
+                # now run ping and collect results
+                ping_result = hostA.cmd(f"ping6 -c4 -i0.2 2001:db8:ffff:{vlan_id}::2")
+                assert ', 0% packet loss,' in ping_result, f"{vlan_id=} {dataA=} {dataZ=} {ping_result=}"
+            vlan_inc += 1
