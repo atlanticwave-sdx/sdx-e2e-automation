@@ -1,5 +1,21 @@
 # sdx-e2e-automation
 
+## Run daily E2E tests
+
+## Update the GitHub Project board
+
+## Send a Slack report
+
+## Update a Shields.io badge showing the last run date
+
+## Display badges in README.md
+
+# SDX E2E Automation
+
+[![Daily E2E Tests](https://github.com/atlanticwave-sdx/sdx-e2e-automation/actions/workflows/e2e-daily.yml/badge.svg?branch=main)](https://github.com/atlanticwave-sdx/sdx-e2e-automation/actions/workflows/e2e-daily.yml)
+![Last E2E Run](https://img.shields.io/endpoint?url=https://atlanticwave-sdx.github.io/sdx-e2e-automation/.github/badge/badge.json)
+
+
 **End-to-End (E2E) Automation Framework for AtlanticWave-SDX**
 
 This repository manages the automation of SDX end-to-end tests, result reporting, and GitHub Projects CI/CD integration. It is designed to extract, parse, and update test statuses from `results.xml` into GitHub Project fields.

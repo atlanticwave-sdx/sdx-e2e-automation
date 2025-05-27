@@ -1,0 +1,71 @@
+name: Daily E2E Test Report
+
+on:
+  schedule:
+    - cron: "0 7 * * *"  # Daily at 2 AM ET (7 AM UTC)
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  GITHUB_ORG: atlanticwave-sdx
+  GITHUB_PROJECT_NUMBER: 16
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose python3 python3-pip libxml2-utils
+        pip3 install --upgrade pip requests
+
+    - name: Prune old Docker images (ensure fresh pulls)
+      run: docker image prune -a -f || true
+
+    - name: Pull Docker images
+      run: docker-compose pull
+
+    - name: Start Docker Compose stack
+      run: docker-compose up -d --wait
+
+    - name: Run pytest in mininet
+      run: docker-compose exec -T mininet python3 -m pytest tests/ --junitxml=/tmp/results.xml
+
+    - name: Copy results.xml from container
+      run: |
+        mkdir -p ./e2e-output
+        docker cp $(docker-compose ps -q mininet):/tmp/results.xml ./e2e-output/results.xml
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: results
+        path: ./e2e-output/results.xml
+
+    - name: Update GitHub Project board
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: python3 update_project.py
+
+    - name: Post Slack Summary
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        PASSED=$(xmllint --xpath "count(//testsuite/testcase[not(failure) and not(skipped)])" ./e2e-output/results.xml)
+        FAILED=$(xmllint --xpath "count(//testsuite/testcase[failure])" ./e2e-output/results.xml)
+        SKIPPED=$(xmllint --xpath "count(//testsuite/testcase[skipped])" ./e2e-output/results.xml)
+        TOTAL=$(xmllint --xpath "count(//testsuite/testcase)" ./e2e-output/results.xml)
+
+        TEXT="📊 *Daily E2E Test Report*\n*Passed:* $PASSED\n*Failed:* $FAILED\n*Skipped:* $SKIPPED\n*Total:* $TOTAL"
+        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$TEXT\"}" "$SLACK_WEBHOOK_URL"
+
