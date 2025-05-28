@@ -231,4 +231,3 @@ services:
       pip3 install pytest requests &&
       python3 -m pytest tests/ --junitxml=/tmp/results.xml &&
       tail -f /dev/null"
-
