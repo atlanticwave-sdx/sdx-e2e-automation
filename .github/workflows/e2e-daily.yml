@@ -92,7 +92,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: python3 update_project.py
 
-    - name: Post Slack Summary
+    - name: Post Slack Summary (only if failed)
+      if: always()
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       run: |
@@ -101,6 +102,10 @@ jobs:
         SKIPPED=$(xmllint --xpath "count(//testsuite/testcase[skipped])" ./e2e-output/results.xml)
         TOTAL=$(xmllint --xpath "count(//testsuite/testcase)" ./e2e-output/results.xml)
 
-        TEXT="📊 *Daily E2E Test Report*\n*Passed:* $PASSED\n*Failed:* $FAILED\n*Skipped:* $SKIPPED\n*Total:* $TOTAL"
-        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$TEXT\"}" "$SLACK_WEBHOOK_URL"
+        if [ "$FAILED" -gt 0 ]; then
+          TEXT="X *E2E Test Failures Detected*\n*Passed:* $PASSED\n*Failed:* $FAILED\n*Skipped:* $SKIPPED\n*Total:* $TOTAL"
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$TEXT\"}" "$SLACK_WEBHOOK_URL"
+        else
+          echo "No failures. Slack alert not sent."
+        fi
 
