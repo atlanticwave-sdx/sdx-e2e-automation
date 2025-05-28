@@ -70,11 +70,11 @@ jobs:
         fi
 
     - name: Run end-to-end tests inside the end2end container
-    run: |
-      set +e
-      docker-compose exec -T end2end python3 -m pytest tests/ --junitxml=/tmp/results.xml
-      echo "Pytest exit code: $?"
-      set -e
+      run: |
+        set +e
+        docker-compose exec -T end2end python3 -m pytest tests/ --junitxml=/tmp/results.xml
+        echo "Pytest exit code: $?"
+        set -e
 
     - name: Copy results.xml from end2end container
       run: |
