@@ -60,6 +60,8 @@ jobs:
           echo "Still waiting on: $unhealthy"
           sleep 5
         done
+        echo "Docker containers (docker ps -a):"
+        docker ps -a
 
     - name: Run end-to-end tests inside the end2end container
       run: |
@@ -70,28 +72,20 @@ jobs:
 
     - name: Copy results.xml from end2end container
       run: |
-        echo "Docker containers (docker ps -a):"
-        docker ps -a
-        CONTAINER_ID=$(docker-compose ps -q end2end)
-        if [ -z "$CONTAINER_ID" ]; then
-          echo "Could not find running '$CONTAINER_ID' container"
-          exit 1
-        fi
         echo "Waiting for /tmp/results.xml to be created in end2end container..."
         for i in {1..12}; do
-          if docker exec "$CONTAINER_ID" test -f /tmp/results.xml; then
+          if test -f ./e2e-output/results.xml; then
             echo "Found results.xml"
             break
           fi
           echo "Waiting... ($i/12)"
           sleep 5
         done
-        if ! docker exec "$CONTAINER_ID" test -f /tmp/results.xml; then
+        if test -f ./e2e-output/results.xml; then
           echo "results.xml not found after waiting. Test may have failed."
           exit 1
         fi
         mkdir -p ./e2e-output
-        docker cp "$CONTAINER_ID":/tmp/results.xml ./e2e-output/results.xml
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
