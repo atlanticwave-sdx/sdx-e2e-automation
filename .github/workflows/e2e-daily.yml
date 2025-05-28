@@ -63,7 +63,7 @@ jobs:
         echo "Docker containers (docker ps -a):"
         docker ps -a
 
-     - name: Run end-to-end tests in container
+    - name: Run end-to-end tests in container
       run: docker-compose exec -T end2end python3 -m pytest tests/ --junitxml=/tmp/results.xml || true
 
     - name: Wait for results.xml file
