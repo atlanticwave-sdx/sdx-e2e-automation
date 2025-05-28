@@ -208,6 +208,7 @@ services:
         tail -f /dev/null
   end2end:
     image: debian:bookworm-slim
+    container_name: end2end
     depends_on:
       mongo:
         condition: service_healthy

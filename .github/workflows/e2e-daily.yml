@@ -80,7 +80,7 @@ jobs:
       run: |
         CONTAINER_ID=$(docker-compose ps -q end2end)
         if [ -z "$CONTAINER_ID" ]; then
-          echo "Could not find running end2end container"
+          echo "Could not find running '$CONTAINER_ID' container"
           exit 1
         fi
         echo "Waiting for /tmp/results.xml to be created in end2end container..."
