@@ -48,26 +48,18 @@ jobs:
         RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
         RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
-    - name: Wait for all services to be healthy
+    - name: Wait for all containers to become healthy
       run: |
-        TIMEOUT=180
-        INTERVAL=5
-        ELAPSED=0
-        echo "Waiting for services to be healthy..."
-        while [ $ELAPSED -lt $TIMEOUT ]; do
-          UNHEALTHY=$(docker-compose ps | grep -E "unhealthy" || true)
-          if [ -z "$UNHEALTHY" ]; then
+        echo "Waiting for containers to become healthy..."
+        for i in {1..60}; do
+          unhealthy=$(docker inspect --format '{{.Name}} {{.State.Health.Status}}' $(docker-compose ps -q) | grep -v healthy || true)
+          if [ -z "$unhealthy" ]; then
             echo "All containers are healthy."
             break
           fi
-          sleep $INTERVAL
-          ELAPSED=$((ELAPSED + INTERVAL))
+          echo "Still waiting on: $unhealthy"
+          sleep 5
         done
-        if [ $ELAPSED -ge $TIMEOUT ]; then
-          echo "Some containers are still unhealthy:"
-          docker-compose ps
-          exit 1
-        fi
 
     - name: Run end-to-end tests inside the end2end container
       run: |
