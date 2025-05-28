@@ -2,8 +2,9 @@ services:
   mongo:
     image: mongo:7.0
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     healthcheck:
       test: mongosh --quiet "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@127.0.0.1:27017/?authSource=admin" --eval 'db.runCommand("ping").ok'
       interval: 5s
@@ -12,8 +13,9 @@ services:
   mq1:
     image: rabbitmq:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 5s
@@ -22,8 +24,9 @@ services:
   ampath:
     image: amlight/kytos-sdx:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -43,8 +46,9 @@ services:
   sax:
     image: amlight/kytos-sdx:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -64,8 +68,9 @@ services:
   tenet:
     image: amlight/kytos-sdx:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -85,8 +90,9 @@ services:
   ampath-lc:
     image: awsdx/sdx-lc:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -108,8 +114,9 @@ services:
   sax-lc:
     image: awsdx/sdx-lc:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -131,8 +138,9 @@ services:
   tenet-lc:
     image: awsdx/sdx-lc:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -154,8 +162,9 @@ services:
   sdx-controller:
     image: awsdx/sdx-controller:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
