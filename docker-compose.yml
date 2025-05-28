@@ -190,7 +190,6 @@ services:
     volumes:
       - .:/sdx-end-to-end-tests
       - /lib/modules:/lib/modules
-      - ./e2e-output:/tmp
     working_dir: /sdx-end-to-end-tests
     depends_on:
       - ampath
@@ -207,3 +206,22 @@ services:
         apt-get update && apt-get install -y tmux jq python3-pytest python3-requests
         python3 -m pip install -r requirements.txt
         tail -f /dev/null
+  end2end:
+    image: debian:bookworm-slim
+    pull_policy: always
+    volumes:
+      - .:/sdx-end-to-end-tests
+      - ./e2e-output:/tmp
+    working_dir: /sdx-end-to-end-tests
+    depends_on:
+      - ampath
+      - sax
+      - tenet
+      - sdx-controller
+      - ampath-lc
+      - sax-lc
+      - tenet-lc
+      - mq1
+      - mongo
+    entrypoint: ["/bin/bash", "-x", "-c", "apt-get update && apt-get install -y python3 python3-pip && pip3 install pytest requests && pytest tests/ --junitxml=/tmp/results.xml"]
+

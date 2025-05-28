@@ -55,13 +55,8 @@ jobs:
         RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
         RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
-    - name: Run pytest in mininet
-      run: docker-compose exec -T mininet python3 -m pytest tests/ --junitxml=/tmp/results.xml
-
-    - name: Copy results.xml from container
-      run: |
-        mkdir -p ./e2e-output
-        docker cp $(docker-compose ps -q mininet):/tmp/results.xml ./e2e-output/results.xml
+    - name: Run E2E tests in end2end container
+      run: docker-compose run end2end
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -72,9 +67,7 @@ jobs:
     - name: Update GitHub Project board
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        source venv/bin/activate
-        python3 update_project.py
+      run: python3 update_project.py
 
     - name: Post Slack Summary
       env:
