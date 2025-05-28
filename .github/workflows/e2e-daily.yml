@@ -24,13 +24,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose python3 python3-pip libxml2-utils
 
-    - name: Set up Python virtual environment
-      run: |
-        python3 -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-        pip install requests
-
     - name: Verify Docker is available
       run: |
         docker --version
@@ -55,8 +48,34 @@ jobs:
         RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
         RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
+    - name: Wait for all services to be healthy
+      run: |
+        TIMEOUT=180
+        INTERVAL=5
+        ELAPSED=0
+        echo "Waiting for services to be healthy..."
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          UNHEALTHY=$(docker-compose ps | grep -E "unhealthy" || true)
+          if [ -z "$UNHEALTHY" ]; then
+            echo "All containers are healthy."
+            break
+          fi
+          sleep $INTERVAL
+          ELAPSED=$((ELAPSED + INTERVAL))
+        done
+        if [ $ELAPSED -ge $TIMEOUT ]; then
+          echo "Some containers are still unhealthy:"
+          docker-compose ps
+          exit 1
+        fi
+
     - name: Run E2E tests in end2end container
-      run: docker-compose run end2end
+      run: docker-compose exec -T end2end python3 -m pytest tests/ --junitxml=/tmp/results.xml
+
+    - name: Copy results.xml from end2end container
+      run: |
+        mkdir -p ./e2e-output
+        docker cp $(docker-compose ps -q end2end):/tmp/results.xml ./e2e-output/results.xml
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
