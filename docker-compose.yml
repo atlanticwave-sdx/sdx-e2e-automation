@@ -263,6 +263,8 @@ services:
         condition: service_healthy
       sdx-controller:
         condition: service_healthy
+    healthcheck:
+      disable: true
     volumes:
       - ./e2e-output:/tmp
     entrypoint: >
