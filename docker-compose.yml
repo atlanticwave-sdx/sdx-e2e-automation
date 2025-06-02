@@ -244,16 +244,6 @@ services:
   end2end:
     image: debian:bookworm-slim
     container_name: end2end
-    depends_on:
-      mongo:
-      mq1:
-      ampath:
-      sax:
-      tenet:
-      ampath-lc:
-      sax-lc:
-      tenet-lc:
-      sdx-controller:
     healthcheck:
       disable: true
     volumes:
