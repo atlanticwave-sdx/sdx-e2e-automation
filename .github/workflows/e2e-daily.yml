@@ -41,7 +41,7 @@ jobs:
         RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
     - name: Start Docker Compose stack
-      run: docker-compose up -d --remove-orphans mongo mq1 ampath sax tenet ampath-lc sax-lc tenet-lc sdx-controller mininet
+      run: docker-compose up -d --remove-orphans
       env:
         MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
         MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
@@ -62,9 +62,6 @@ jobs:
         done
         echo "Docker containers (docker ps -a):"
         docker ps -a
-
-    - name: Run end2end test container separately
-      run: docker-compose run --rm end2end
 
     - name: Run end-to-end tests in container
       run: docker-compose exec -T end2end python3 -m pytest tests/ --junitxml=/tmp/results.xml || true
