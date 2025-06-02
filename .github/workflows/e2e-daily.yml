@@ -101,7 +101,7 @@ jobs:
     - name: Update GitHub Project board
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: python3 update_project.py
+      run: python3 update_project_from_results.py
 
     - name: Post Slack Summary (only if failed)
       if: always()
