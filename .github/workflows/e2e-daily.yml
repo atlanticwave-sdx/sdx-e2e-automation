@@ -100,6 +100,8 @@ jobs:
 
     - name: Update GitHub Project board
       env:
+        GITHUB_ORG: atlanticwave-sdx
+        GITHUB_PROJECT_NUMBER: 16
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: python3 update_project_from_results.py
 
