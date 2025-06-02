@@ -102,7 +102,7 @@ jobs:
       env:
         GITHUB_ORG: atlanticwave-sdx
         GITHUB_PROJECT_NUMBER: 16
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN_PAT }}
       run: python3 update_project_from_results.py
 
     - name: Post Slack Summary (only if failed)
