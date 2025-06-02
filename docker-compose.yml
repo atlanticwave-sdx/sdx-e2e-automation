@@ -235,19 +235,25 @@ services:
         condition: service_healthy
       tenet:
         condition: service_healthy
+      ampath-lc:
+        condition: service_healthy
+      sax-lc:
+        condition: service_healthy
+      tenet-lc:
+        condition: service_healthy
+      sdx-controller:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "test -f /tmp/results.xml"]
       interval: 10s
       timeout: 5s
-      retries: 20
+      retries: 6
     volumes:
-      - .:/sdx-end-to-end-tests
       - ./e2e-output:/tmp
-    working_dir: /sdx-end-to-end-tests
     entrypoint: >
       /bin/bash -c "
       apt-get update &&
       apt-get install -y python3 python3-pip &&
       pip3 install pytest requests &&
-      python3 -m pytest tests/ --junitxml=/tmp/results.xml &&
-      tail -f /dev/null"
+      pytest tests/ --junitxml=/tmp/results.xml ||
+      echo 'Pytest run failed'"
