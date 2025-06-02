@@ -246,23 +246,14 @@ services:
     container_name: end2end
     depends_on:
       mongo:
-        condition: service_healthy
       mq1:
-        condition: service_healthy
       ampath:
-        condition: service_healthy
       sax:
-        condition: service_healthy
       tenet:
-        condition: service_healthy
       ampath-lc:
-        condition: service_healthy
       sax-lc:
-        condition: service_healthy
       tenet-lc:
-        condition: service_healthy
       sdx-controller:
-        condition: service_healthy
     healthcheck:
       disable: true
     volumes:
