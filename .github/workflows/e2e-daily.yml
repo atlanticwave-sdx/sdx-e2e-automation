@@ -24,6 +24,16 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose python3 python3-pip libxml2-utils
 
+    # 🔹 Create .env BEFORE any docker-compose command
+    - name: Create .env file for Docker Compose
+      run: |
+        cat << EOF > .env
+        MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+        MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+        RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+        RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
+        EOF
+
     - name: Stop and remove all containers and volumes
       run: |
         docker-compose down -v --remove-orphans
@@ -33,15 +43,6 @@ jobs:
 
     - name: Prune old Docker images (ensure fresh pulls)
       run: docker image prune -a -f || true
-
-    - name: Create .env file for Docker Compose
-      run: |
-        cat << EOF > .env
-        MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
-        MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
-        RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
-        RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
-        EOF
 
     - name: Pull Docker images
       run: docker-compose pull
