@@ -33,6 +33,9 @@ class TestE2EReturnCodesEditL2vpn:
         response_json = response.json()
         for l2vpn in response_json:
             response = requests.delete(api_url+f'/{l2vpn}')
+        # wait for the L2VPNs to be deleted
+        time.sleep(2)
+
         # Create an L2VPN to edit later
         api_url = SDX_CONTROLLER + '/l2vpn/1.0'
         cls.payload = {
@@ -44,11 +47,11 @@ class TestE2EReturnCodesEditL2vpn:
         }
         response = requests.post(api_url, json=cls.payload)
         assert response.status_code == 201, response.text
+        cls.key = response.json()["service_id"]
 
         # wait until status changes for UNDER_PROVISIONING to UP
         for i in range(30):
             data = requests.get(api_url).json()
-            cls.key = next(iter(data))
             if data[cls.key]["status"] == "up":
                 break
             time.sleep(2)
@@ -67,6 +70,18 @@ class TestE2EReturnCodesEditL2vpn:
         response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
         assert response.status_code == 201, response.text
 
+        # allow time for SDX-Controller to propagate changes
+        time.sleep(5)
+
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert len(data) == 1, str(data)
+        for service_id, l2vpn in data.items():
+            assert l2vpn["status"] == "up", str(l2vpn)
+            assert len(l2vpn["endpoints"]) == 2, str(l2vpn)
+            assert len(l2vpn["current_path"]) > 0, str(l2vpn)
+
     def test_011_edit_l2vpn_port_id(self):
         """
         Test the return code for editing a SDX L2VPN
@@ -77,6 +92,18 @@ class TestE2EReturnCodesEditL2vpn:
         self.payload['endpoints'][0]['port_id'] = "urn:sdx:port:sax.net:Sax01:50"
         response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
         assert response.status_code == 201, response.text
+
+        # allow time for SDX-Controller to propagate changes
+        time.sleep(5)
+
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert len(data) == 1, str(data)
+        for service_id, l2vpn in data.items():
+            assert l2vpn["status"] == "up", str(l2vpn)
+            assert len(l2vpn["endpoints"]) == 2, str(l2vpn)
+            assert len(l2vpn["current_path"]) > 0, str(l2vpn)
 
     def test_020_edit_l2vpn_with_vlan_integer(self):
         """
@@ -251,6 +278,18 @@ class TestE2EReturnCodesEditL2vpn:
         response = requests.post(api_url, json=payload)
         assert response.status_code == 201, response.text
 
+        # allow time for SDX-Controller to propagate changes
+        time.sleep(5)
+
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert len(data) == 2, str(data)
+        for service_id, l2vpn in data.items():
+            assert l2vpn["status"] == "up", str(l2vpn)
+            assert len(l2vpn["endpoints"]) == 2, str(l2vpn)
+            assert len(l2vpn["current_path"]) > 0, str(l2vpn)
+
         # Edit the first l2pvn to match the newly created one
         self.payload['endpoints'][0]['vlan'] = "500"
         self.payload['endpoints'][1]['vlan'] = "500"
@@ -278,6 +317,18 @@ class TestE2EReturnCodesEditL2vpn:
         response = requests.patch(f"{api_url}/{self.key}", json=payload)
         assert response.status_code == 201, response.text
 
+        # allow time for SDX-Controller to propagate changes
+        time.sleep(5)
+
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert len(data) == 1, str(data)
+        for service_id, l2vpn in data.items():
+            assert l2vpn["status"] == "up", str(l2vpn)
+            assert len(l2vpn["endpoints"]) == 2, str(l2vpn)
+            assert len(l2vpn["current_path"]) > 0, str(l2vpn)
+
     def test_061_edit_l2vpn_with_max_delay(self):
         """
         Test the return code for editing a SDX L2VPN
@@ -299,6 +350,18 @@ class TestE2EReturnCodesEditL2vpn:
         response = requests.patch(f"{api_url}/{self.key}", json=payload)
         assert response.status_code == 201, response.text
 
+        # allow time for SDX-Controller to propagate changes
+        time.sleep(5)
+
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert len(data) == 1, str(data)
+        for service_id, l2vpn in data.items():
+            assert l2vpn["status"] == "up", str(l2vpn)
+            assert len(l2vpn["endpoints"]) == 2, str(l2vpn)
+            assert len(l2vpn["current_path"]) > 0, str(l2vpn)
+
     def test_062_edit_l2vpn_with_max_number_oxps(self):
         """
         Test the return code for editing a SDX L2VPN
@@ -319,6 +382,18 @@ class TestE2EReturnCodesEditL2vpn:
         }
         response = requests.patch(f"{api_url}/{self.key}", json=payload)
         assert response.status_code == 201, response.text
+
+        # allow time for SDX-Controller to propagate changes
+        time.sleep(5)
+
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert len(data) == 1, str(data)
+        for service_id, l2vpn in data.items():
+            assert l2vpn["status"] == "up", str(l2vpn)
+            assert len(l2vpn["endpoints"]) == 2, str(l2vpn)
+            assert len(l2vpn["current_path"]) > 0, str(l2vpn)
 
     def test_063_edit_l2vpn_with_min_bw_out_of_range(self):
         """
@@ -406,6 +481,18 @@ class TestE2EReturnCodesEditL2vpn:
         }
         response = requests.post(api_url, json=payload)
         assert response.status_code == 201, response.text
+
+        # allow time for SDX-Controller to propagate changes
+        time.sleep(5)
+
+        response = requests.get(api_url)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert len(data) == 2, str(data)
+        for service_id, l2vpn in data.items():
+            assert l2vpn["status"] == "up", str(l2vpn)
+            assert len(l2vpn["endpoints"]) == 2, str(l2vpn)
+            assert len(l2vpn["current_path"]) > 0, str(l2vpn)
 
         # Edit high min_bw to get code 410
         payload = {
