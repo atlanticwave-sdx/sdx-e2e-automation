@@ -24,7 +24,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose python3 python3-pip libxml2-utils
 
-    # 🔹 Create .env BEFORE any docker-compose command
+    # Create .env BEFORE any docker-compose command
     - name: Create .env file for Docker Compose
       run: |
         cat << EOF > .env
@@ -63,13 +63,13 @@ jobs:
         RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
         RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
-    - name: Wait for all containers to become healthy
+    - name: Wait for mongo and mq1 to become healthy
       run: |
-        echo "Waiting for containers to become healthy..."
+        echo "Waiting for containers with healthchecks to become healthy..."
         for i in {1..60}; do
-          unhealthy=$(docker inspect --format '{{.Name}} {{.State.Health.Status}}' $(docker-compose ps -q) | grep -v healthy || true)
+          unhealthy=$(docker inspect --format '{{.Name}} {{.State.Health.Status}}' $(docker ps -q --filter "name=sdx-e2e-automation_mongo_1" --filter "name=sdx-e2e-automation_mq1_1") | grep -v healthy || true)
           if [ -z "$unhealthy" ]; then
-            echo "All containers are healthy."
+            echo "Mongo and mq1 are healthy."
             break
           fi
           echo "Still waiting on: $unhealthy"
@@ -78,29 +78,50 @@ jobs:
         echo "Docker containers (docker ps -a):"
         docker ps -a
 
+    # NEW: wait until pytest is actually available in mininet
+    - name: Wait for pytest to be available in mininet
+      run: |
+        echo "Waiting for pytest to be installed in mininet..."
+        for i in {1..30}; do
+          if docker-compose exec -T mininet python3 -c "import pytest" 2>/dev/null; then
+            echo "pytest is available in mininet."
+            exit 0
+          fi
+          echo "pytest not available yet... ($i/30)"
+          sleep 10
+        done
+        echo "pytest was not installed in time. Dumping mininet logs:"
+        docker-compose logs mininet || true
+        exit 1
+
     - name: Run end-to-end tests in container
       run: docker-compose exec -T mininet python3 -m pytest tests/ --junitxml=/tmp/results.xml || true
 
     - name: Wait for results.xml file
       run: |
-        for i in {1..12}; do
-          if docker exec mininet test -f /tmp/results.xml; then
+        echo "Waiting for /tmp/results.xml in mininet..."
+        for i in {1..24}; do
+          if docker-compose exec -T mininet test -f /tmp/results.xml; then
             echo "Found results.xml"
-            break
+            exit 0
           fi
-          echo "Waiting for results.xml... ($i/12)"
+          echo "Waiting for results.xml... ($i/24)"
           sleep 5
         done
+        echo "results.xml not found after timeout. Dumping mininet logs:"
+        docker-compose logs mininet || true
+        exit 1
 
     - name: Copy results.xml from mininet container
       run: |
+        rm -f ./e2e-output/results.xml
         mkdir -p ./e2e-output
         CONTAINER_ID=$(docker-compose ps -q mininet)
         if [ -z "$CONTAINER_ID" ]; then
           echo "Could not find running 'mininet' container"
           exit 1
         fi
-        docker cp $CONTAINER_ID:/tmp/results.xml ./e2e-output/results.xml
+        docker cp "$CONTAINER_ID:/tmp/results.xml" ./e2e-output/results.xml
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -127,14 +148,18 @@ jobs:
       if: always()
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        GITHUB_SHA: ${{ github.sha }}
       run: |
+        SHORT_SHA=${GITHUB_SHA:0:7}
+
         PASSED=$(xmllint --xpath "count(//testsuite/testcase[not(failure) and not(skipped)])" ./e2e-output/results.xml)
         FAILED=$(xmllint --xpath "count(//testsuite/testcase[failure])" ./e2e-output/results.xml)
         SKIPPED=$(xmllint --xpath "count(//testsuite/testcase[skipped])" ./e2e-output/results.xml)
         TOTAL=$(xmllint --xpath "count(//testsuite/testcase)" ./e2e-output/results.xml)
 
         if [ "$FAILED" -gt 0 ]; then
-          TEXT="X *E2E Test Failures Detected*\n*Passed:* $PASSED\n*Failed:* $FAILED\n*Skipped:* $SKIPPED\n*Total:* $TOTAL"
+          TEXT="X *E2E Test Failures Detected* (run #${GITHUB_RUN_NUMBER}, commit ${SHORT_SHA})\n*Passed:* $PASSED\n*Failed:* $FAILED\n*Skipped:* $SKIPPED\n*Total:* $TOTAL"
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$TEXT\"}" "$SLACK_WEBHOOK_URL"
         else
           echo "No failures. Slack alert not sent."
