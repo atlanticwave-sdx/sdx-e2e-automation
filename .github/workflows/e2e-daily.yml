@@ -78,7 +78,6 @@ jobs:
         echo "Docker containers (docker ps -a):"
         docker ps -a
 
-    # NEW: wait until pytest is actually available in mininet
     - name: Wait for pytest to be available in mininet
       run: |
         echo "Waiting for pytest to be installed in mininet..."
@@ -94,34 +93,26 @@ jobs:
         docker-compose logs mininet || true
         exit 1
 
+    - name: Install Python requests in mininet
+      run: docker-compose exec -T mininet python3 -m pip install requests
+
     - name: Run end-to-end tests in container
       run: docker-compose exec -T mininet python3 -m pytest tests/ --junitxml=/tmp/results.xml || true
 
+    # /tmp is mounted as ./e2e-output, so watch the host path directly
     - name: Wait for results.xml file
       run: |
-        echo "Waiting for /tmp/results.xml in mininet..."
+        echo "Waiting for ./e2e-output/results.xml on host..."
         for i in {1..24}; do
-          if docker-compose exec -T mininet test -f /tmp/results.xml; then
-            echo "Found results.xml"
+          if [ -f ./e2e-output/results.xml ]; then
+            echo "Found results.xml on host."
             exit 0
           fi
           echo "Waiting for results.xml... ($i/24)"
           sleep 5
         done
-        echo "results.xml not found after timeout. Dumping mininet logs:"
-        docker-compose logs mininet || true
+        echo "results.xml not found after timeout."
         exit 1
-
-    - name: Copy results.xml from mininet container
-      run: |
-        rm -f ./e2e-output/results.xml
-        mkdir -p ./e2e-output
-        CONTAINER_ID=$(docker-compose ps -q mininet)
-        if [ -z "$CONTAINER_ID" ]; then
-          echo "Could not find running 'mininet' container"
-          exit 1
-        fi
-        docker cp "$CONTAINER_ID:/tmp/results.xml" ./e2e-output/results.xml
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -152,6 +143,11 @@ jobs:
         GITHUB_SHA: ${{ github.sha }}
       run: |
         SHORT_SHA=${GITHUB_SHA:0:7}
+
+        if [ ! -f ./e2e-output/results.xml ]; then
+          echo "results.xml not found; skipping Slack notification."
+          exit 0
+        fi
 
         PASSED=$(xmllint --xpath "count(//testsuite/testcase[not(failure) and not(skipped)])" ./e2e-output/results.xml)
         FAILED=$(xmllint --xpath "count(//testsuite/testcase[failure])" ./e2e-output/results.xml)
