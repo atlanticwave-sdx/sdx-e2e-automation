@@ -69,12 +69,12 @@ jobs:
         docker ps -a
 
     - name: Run end-to-end tests in container
-      run: docker-compose exec -T end2end python3 -m pytest tests/ --junitxml=/tmp/results.xml || true
+      run: docker-compose exec -T mininet python3 -m pytest tests/ --junitxml=/tmp/results.xml || true
 
     - name: Wait for results.xml file
       run: |
         for i in {1..12}; do
-          if docker exec end2end test -f /tmp/results.xml; then
+          if docker exec mininet test -f /tmp/results.xml; then
             echo "Found results.xml"
             break
           fi
@@ -82,21 +82,15 @@ jobs:
           sleep 5
         done
 
-    - name: Copy results.xml from end2end container
+    - name: Copy results.xml from mininet container
       run: |
         mkdir -p ./e2e-output
-        CONTAINER_ID=$(docker-compose ps -q end2end)
+        CONTAINER_ID=$(docker-compose ps -q mininet)
         if [ -z "$CONTAINER_ID" ]; then
-          echo "Could not find running '$CONTAINER_ID' container"
+          echo "Could not find running 'mininet' container"
           exit 1
         fi
         docker cp $CONTAINER_ID:/tmp/results.xml ./e2e-output/results.xml
-
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      with:
-        name: results
-        path: ./e2e-output/results.xml
 
     - name: Update GitHub Project board
       env:
