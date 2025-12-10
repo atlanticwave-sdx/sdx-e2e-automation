@@ -1,140 +1,818 @@
 <?xml version="1.0" encoding="utf-8"?>
-<testsuites name="pytest tests">
-  <testsuite name="pytest" errors="0" failures="0" skipped="16" tests="103" time="1790.792" timestamp="2025-12-09T19:51:25.433773+00:00" hostname="f7a25374cdbb">
-    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_010_list_topology" time="51.078"/>
-    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_015_check_topology_follows_model_2_0_0" time="0.048"/>
-    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_020_set_intra_link_down_check_topology" time="15.080"/>
-    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_025_set_inter_link_down_check_topology" time="15.066"/>
-    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_030_location_change" time="17.012"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_010_list_l2vpn_empty" time="32.208"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_020_create_l2vpn_successfully" time="10.249"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_030_create_l2vpn_with_any_vlan" time="10.247"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_040_edit_vlan_l2vpn_successfully" time="15.854"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_045_edit_port_l2vpn_successfully" time="10.488"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_050_delete_l2vpn_successfully" time="10.613"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_060_link_convergency_with_l2vpn_with_alternative_paths" time="44.644"/>
-    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_070_multiple_l2vpn_with_bandwidth_qos_metric" time="103.174"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_010_create_l2vpn" time="42.636"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_011_create_l2vpn_vlan_translation" time="17.737"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_012_create_l2vpn_with_vlan_any" time="7.419"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_013_create_l2vpn_with_vlan_range" time="7.539"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_014_create_l2vpn_with_vlan_untagged" time="7.362"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_015_create_l2vpn_with_optional_attributes" time="2.304"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_020_create_l2vpn_with_invalid_vlan_type" time="2.031"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_021_create_l2vpn_with_vlan_out_of_range" time="2.035"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_022_create_l2vpn_with_vlan_negative" time="2.026"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_023_create_l2vpn_with_vlan_all" time="2.030"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_024_create_l2vpn_with_missing_vlan" time="2.029"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_025_create_l2vpn_with_body_incorrect" time="2.029"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_026_create_l2vpn_with_missing_name" time="2.028"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_027_create_l2vpn_with_non_existent_port" time="2.031"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_028_create_l2vpn_with_invalid_port_id_format" time="2.037"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_029_create_l2vpn_with_single_endpoint" time="2.049"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_030_create_l2vpn_with_p2mp" time="2.050"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_040_create_l2vpn_existing" time="7.271"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_050_create_l2vpn_with_valid_bw" time="7.487"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_051_create_l2vpn_with_min_bw_out_of_range" time="2.258"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_052_create_l2vpn_with_min_bw_negative" time="2.068"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_053_create_l2vpn_with_no_available_bw" time="7.291"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_054_create_l2vpn_with_available_bw" time="12.735"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_055_create_l2vpn_with_valid_max_delay" time="7.821"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_056_create_l2vpn_with_max_delay_out_of_range" time="2.239"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_057_create_l2vpn_with_max_delay_negative" time="2.066"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_058_create_l2vpn_with_valid_max_number_oxps" time="7.262"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_059_create_l2vpn_with_max_number_oxps_out_of_range" time="2.216"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_060_create_l2vpn_with_max_number_oxps_negative" time="2.039"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_061_create_l2vpn_with_no_available_oxps" time="7.279"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_062_create_l2vpn_with_all_available_oxps" time="12.661"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_070_create_l2vpn_with_impossible_scheduling" time="2.476"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_071_create_l2vpn_with_formatting_issue" time="2.049"/>
-    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_080_create_l2vpn_with_no_path_available_between_endpoints" time="32.612"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_010_edit_l2vpn_vlan" time="43.855"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_011_edit_l2vpn_port_id" time="9.856"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_020_edit_l2vpn_with_vlan_integer" time="4.586"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_021_edit_l2vpn_with_vlan_out_of_range" time="4.624"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_022_edit_l2vpn_with_vlan_all" time="4.653"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_023_edit_l2vpn_with_missing_vlan" time="4.633"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_024_edit_l2vpn_with_body_incorrect" time="4.436"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_025_edit_l2vpn_with_vlan_negative" time="4.276"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_026_edit_l2vpn_with_missing_name" time="4.531"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_027_edit_l2vpn_with_non_existent_port" time="4.460"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_028_edit_l2vpn_with_invalid_port_id_format" time="4.364"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_029_edit_l2vpn_with_with_single_endpoint" time="4.355"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_030_edit_l2vpn_with_p2mp" time="4.776"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_040_edit_l2vpn_not_found_id_code404" time="4.356"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_050_edit_l2vpn_conflict" time="9.982"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_060_edit_l2vpn_with_min_bw" time="10.335"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_061_edit_l2vpn_with_max_delay" time="10.443"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_062_edit_l2vpn_with_max_number_oxps" time="10.210"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_063_edit_l2vpn_with_min_bw_out_of_range" time="4.810"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_064_edit_l2vpn_with_max_delay_out_of_range" time="4.665"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_065_edit_l2vpn_with_max_number_oxps_out_of_range" time="4.735"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_066_edit_l2vpn_with_no_available_bw" time="10.043"/>
-    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_070_edit_l2vpn_with_impossible_scheduling" time="6.171"/>
-    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_010_list_one_l2vpn" time="44.144"/>
-    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_020_list_one_l2vpn_not_found" time="8.551"/>
-    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_030_list_multiple_l2vpn" time="8.491"/>
-    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_031_list_multiple_l2vpn_multiple_existing" time="13.783"/>
-    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_040_delete_one_l2vpn" time="9.190"/>
-    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_050_delete_one_l2vpn_not_found" time="9.355"/>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_010_intra_domain_link_down" time="81.402"/>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_011_intra_domain_link_down_path_found" time="20.504">
-      <skipped type="pytest.xfail" message="Connectivity is not verified with a PING test between hosts after verifying that the L2VPN status remains up"/>
+<testsuites>
+  <testsuite name="pytest" errors="0" failures="21" skipped="9" tests="78" time="823.364" timestamp="2025-04-09T19:09:44.493840+00:00" hostname="9671edfab6bc">
+    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_010_list_topology" time="95.246"/>
+    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_015_check_topology_follows_model_2_0_0" time="0.019"/>
+    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_020_set_intra_link_down_check_topology" time="15.070"/>
+    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_025_set_inter_link_down_check_topology" time="15.043"/>
+    <testcase classname="tests.test_01_topology.TestE2ETopology" name="test_030_location_change" time="16.675">
+      <failure message="AssertionError: sdx_version=3 oxp_ver1=10 oxp_ver2=11&#10;assert 3.0 &lt; 3.0&#10; +  where 3.0 = float('3')">self = &lt;test_01_topology.TestE2ETopology object at 0x7fc30b75be10&gt;
+
+    def test_030_location_change(self):
+        """Test Location changes"""
+        api_url = SDX_CONTROLLER + '/topology'
+        response = requests.get(api_url)
+        data = response.json()
+        version = float(data["version"])
+    
+        ampath_ctrl = 'ampath'
+        ampath_topo_api = KYTOS_TOPO_API % ampath_ctrl
+        response = requests.get(f"{ampath_topo_api}/switches")
+        assert response.status_code == 200
+        ampath_switches = response.json()["switches"]
+        key = next(iter(ampath_switches))
+        item_to_change_id = ampath_switches[key]['id']
+    
+        # Get OXP version
+        sdx_api = KYTOS_SDX_API % ampath_ctrl
+        response = requests.get(f"{sdx_api}/topology/2.0.0")
+        oxp_ver1 = response.json()["version"]
+    
+        new_metadata = {"lat": "1", "lng": "2", "address": "Miami", "iso3166_2_lvl4": "US-FL"}
+        response = requests.post(f"{ampath_topo_api}/switches/{item_to_change_id}/metadata", json=new_metadata)
+        assert 200 &lt;= response.status_code &lt; 300, response.text
+    
+        # Allow time for OXP process the topology update
+        time.sleep(5)
+    
+        # Force the Kytos SDX controller controller to send the topology to the SDX-LC
+        response = requests.post(f"{sdx_api}/topology/2.0.0")
+        assert response.status_code == 200
+    
+        # Get OXP version
+        response = requests.get(f"{sdx_api}/topology/2.0.0")
+        oxp_ver2 = response.json()["version"]
+    
+        response = requests.get(f"{ampath_topo_api}/switches")
+        assert response.status_code == 200
+        ampath_switches = response.json()["switches"]
+        metadata = ampath_switches[item_to_change_id]['metadata']
+        assert metadata == new_metadata, str(metadata)
+    
+        # allow some time for SDX-Controller receive the topology update
+        time.sleep(10)
+    
+        api_url = SDX_CONTROLLER + '/topology'
+        response = requests.get(api_url)
+        data = response.json()
+&gt;       assert version &lt; float(data["version"]), f"sdx_version={data['version']} {oxp_ver1=} {oxp_ver2=}"
+E       AssertionError: sdx_version=3 oxp_ver1=10 oxp_ver2=11
+E       assert 3.0 &lt; 3.0
+E        +  where 3.0 = float('3')
+
+tests/test_01_topology.py:164: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_020_port_in_inter_domain_link_down" time="31.852"/>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_021_port_in_inter_domain_link_down_no_reprov" time="38.902">
-      <skipped type="pytest.xfail" message="The L2VPN is removed after changing nodes to down"/>
+    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_010_list_l2vpn_empty" time="78.600"/>
+    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_020_create_l2vpn_successfully" time="0.192">
+      <failure message="AssertionError: {'reason': 'Connection published', 'service_id': '3fea7db8-d9bd-412a-b046-c64d7ebd313c', 'status': 'UNDER_PROVISIONING'}&#10;assert 'UNDER_PROVISIONING' == 'under provisioning'&#10;  &#10;  - under provisioning&#10;  + UNDER_PROVISIONING">self = &lt;test_05_l2vpn.TestE2EL2VPN object at 0x7fc30b933310&gt;
+
+    def test_020_create_l2vpn_successfully(self):
+        """Test creating a L2VPN successfully."""
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN request 1",
+            "endpoints": [
+                {
+                    "port_id": "urn:sdx:port:ampath.net:Ampath3:50",
+                    "vlan": "300",
+                },
+                {
+                    "port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50",
+                    "vlan": "300",
+                }
+            ]
+        }
+        response = requests.post(api_url, json=payload)
+        assert response.status_code == 201, response.text
+        response_json = response.json()
+&gt;       assert response_json.get("status") == "under provisioning", response_json
+E       AssertionError: {'reason': 'Connection published', 'service_id': '3fea7db8-d9bd-412a-b046-c64d7ebd313c', 'status': 'UNDER_PROVISIONING'}
+E       assert 'UNDER_PROVISIONING' == 'under provisioning'
+E         
+E         - under provisioning
+E         + UNDER_PROVISIONING
+
+tests/test_05_l2vpn.py:54: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_030_uni_port_down" time="41.648"/>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_040_node_down" time="26.299">
-      <skipped type="pytest.xfail" message="The L2VPN status remains up after changing the status of an associated node to down"/>
+    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_030_create_l2vpn_with_any_vlan" time="0.387">
+      <failure message="AssertionError: {'reason': 'Connection published', 'service_id': '6ce0625c-6cf9-47b1-ae56-c934f3081aa0', 'status': 'UNDER_PROVISIONING'}&#10;assert 'UNDER_PROVISIONING' == 'under provisioning'&#10;  &#10;  - under provisioning&#10;  + UNDER_PROVISIONING">self = &lt;test_05_l2vpn.TestE2EL2VPN object at 0x7fc30b92a750&gt;
+
+    def test_030_create_l2vpn_with_any_vlan(self):
+        """Test creating a L2VPN successfully."""
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN request 2",
+            "endpoints": [
+                {
+                    "port_id": "urn:sdx:port:ampath.net:Ampath3:50",
+                    "vlan": "any",
+                },
+                {
+                    "port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50",
+                    "vlan": "any",
+                }
+            ]
+        }
+        response = requests.post(api_url, json=payload)
+        assert response.status_code == 201, response.text
+        response_json = response.json()
+&gt;       assert response_json.get("status") == "under provisioning", response_json
+E       AssertionError: {'reason': 'Connection published', 'service_id': '6ce0625c-6cf9-47b1-ae56-c934f3081aa0', 'status': 'UNDER_PROVISIONING'}
+E       assert 'UNDER_PROVISIONING' == 'under provisioning'
+E         
+E         - under provisioning
+E         + UNDER_PROVISIONING
+
+tests/test_05_l2vpn.py:111: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_050_port_up_inter_domain" time="25.836">
-      <skipped type="pytest.xfail" message="The L2VPN status remains up after changing the status of an associated port to down"/>
+    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_040_edit_vlan_l2vpn_successfully" time="5.258">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 201&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_05_l2vpn.TestE2EL2VPN object at 0x7fc30b75b050&gt;
+
+    def test_040_edit_vlan_l2vpn_successfully(self):
+        """Test change the vlan of endpoints of an existing L2vpn connection."""
+    
+        ## -&gt; ampath
+        response = requests.get("http://ampath:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_a", {}).get("tag", {}).get("value") == 100:
+                found += 1
+        assert found == 0, evcs
+        ## -&gt; tenet
+        response = requests.get("http://tenet:8181/api/kytos/mef_eline/v2/evc/")
+        evcs = response.json()
+        found = 0
+        for evc in evcs.values():
+            if evc.get("uni_z", {}).get("tag", {}).get("value") == 100:
+                found += 1
+        assert found == 0, evcs
+    
+        # wait a few seconds to allow status change from UNDER_PROVISIONG to UP
+        time.sleep(5)
+    
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        response = requests.get(api_url)
+        data = response.json()
+    
+        # Change vlan
+        key = list(data.keys())[0]
+        current_data = data[key]
+        payload = {
+            "name": "New vlan in endpoints",
+            "endpoints": [
+                {
+                    "port_id": current_data["endpoints"][0]["port_id"],
+                    "vlan": "100",
+                },
+                {
+                    "port_id": current_data["endpoints"][1]["port_id"],
+                    "vlan": "100",
+                }
+            ]
+        }
+        response = requests.patch(f"{api_url}/{key}", json=payload)
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 201
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_05_l2vpn.py:181: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_060_port_up_uni" time="28.589"/>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_070_port_uni_up_no_l2vpn_associated" time="25.659"/>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_100_change_vlan_uni" time="33.846">
-      <skipped type="pytest.xfail" message="The L2VPN with VLAN 1000 remains up even after modifying the VLAN range to [100–200]."/>
+    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_045_edit_port_l2vpn_successfully" time="5.024">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 201&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_05_l2vpn.TestE2EL2VPN object at 0x7fc30b75acd0&gt;
+
+    def test_045_edit_port_l2vpn_successfully(self):
+        """Test change the port_id of endpoints of an existing L2vpn connection."""
+        # wait a few seconds to allow status change from UNDER_PROVISIONG to UP
+        time.sleep(5)
+    
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        response = requests.get(api_url)
+        data = response.json()
+        key = list(data.keys())[0]
+        current_data = data[key]
+        assert current_data["endpoints"][0]["port_id"] in ["urn:sdx:port:tenet.ac.za:Tenet03:50", \
+                                                           "urn:sdx:port:ampath.net:Ampath3:50"], str(data)
+        assert current_data["endpoints"][1]["port_id"] in ["urn:sdx:port:tenet.ac.za:Tenet03:50", \
+                                                           "urn:sdx:port:ampath.net:Ampath3:50"], str(data)
+    
+        # Change port_id
+        payload = {
+            "name": "New port_id in endpoints",
+            "endpoints": [
+                {
+                    "port_id": "urn:sdx:port:tenet.ac.za:Tenet01:41",
+                    "vlan": "100",
+                },
+                {
+                    "port_id": "urn:sdx:port:sax.net:Sax01:40",
+                    "vlan": "100",
+                }
+            ]
+        }
+        response = requests.patch(f"{api_url}/{key}", json=payload)
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 201
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_05_l2vpn.py:242: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_101_shrinking_vlan_new_l2vpn_with_wrong_vlan" time="13.755">
-      <skipped type="pytest.xfail" message="l2vpn is created successfully with vlan=1010 even though the vlan_range was changed to [100–200]."/>
+    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_050_delete_l2vpn_successfully" time="10.646"/>
+    <testcase classname="tests.test_05_l2vpn.TestE2EL2VPN" name="test_060_link_convergency_with_l2vpn_with_alternative_paths" time="35.593"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_010_create_l2vpn" time="79.471"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_011_create_l2vpn_vlan_translation" time="0.258"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_012_create_l2vpn_with_vlan_any" time="0.241"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_013_create_l2vpn_with_vlan_range" time="0.462"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_014_create_l2vpn_with_vlan_untagged" time="0.530"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_015_create_l2vpn_with_optional_attributes" time="0.269">
+      <skipped type="pytest.xfail" message="return status 400 - Validation error: Scheduling advanced reservation is not supported"/>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_102_shrinking_vlan_nni_with_alternate_path" time="18.759">
-      <skipped type="pytest.xfail" message="The L2VPN path associated with VLAN 1020 remains unchanged after modifying the VLAN range to [100–200]"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_020_create_l2vpn_with_invalid_vlan_type" time="0.019"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_021_create_l2vpn_with_vlan_out_of_range" time="0.026"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_022_create_l2vpn_with_vlan_negative" time="0.025"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_023_create_l2vpn_with_vlan_all" time="0.041"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_024_create_l2vpn_with_missing_vlan" time="0.036"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_025_create_l2vpn_with_body_incorrect" time="0.039"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_026_create_l2vpn_with_missing_name" time="0.033"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_027_create_l2vpn_with_non_existent_port" time="0.053"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_028_create_l2vpn_with_invalid_port_id_format" time="0.035"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_029_create_l2vpn_with_single_endpoint" time="0.034"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_030_create_l2vpn_with_p2mp" time="0.032"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_040_create_l2vpn_existing" time="30.193"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_050_create_l2vpn_with_valid_bw" time="0.785"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_051_create_l2vpn_with_min_bw_out_of_range" time="0.214"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_052_create_l2vpn_with_min_bw_negative" time="0.077"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_053_create_l2vpn_with_no_available_bw" time="0.413">
+      <skipped type="pytest.xfail" message="return status 201"/>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_104_expanding_vlan_nni" time="18.490">
-      <skipped type="pytest.xfail" message="AssertionError: VLAN range 5000 is invalid, after expanding the range to [1,4000]"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_054_create_l2vpn_with_available_bw" time="1.498"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_055_create_l2vpn_with_valid_max_delay" time="0.318"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_056_create_l2vpn_with_max_delay_out_of_range" time="0.127"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_057_create_l2vpn_with_max_delay_negative" time="0.045"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_058_create_l2vpn_with_valid_max_number_oxps" time="0.207"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_059_create_l2vpn_with_max_number_oxps_out_of_range" time="0.260"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_060_create_l2vpn_with_max_number_oxps_negative" time="0.023"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_061_create_l2vpn_with_no_available_oxps" time="0.159">
+      <skipped type="pytest.xfail" message="return status 201"/>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_105_adding_vlan_range" time="21.546">
-      <skipped type="pytest.xfail" message="The L2VPN with VLAN 1050 remains up even after modifying the VLAN range to [100–200]"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_062_create_l2vpn_with_all_available_oxps" time="0.242"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_070_create_l2vpn_with_impossible_scheduling" time="0.122">
+      <skipped type="pytest.xfail" message="return status 400 - Validation error: Scheduling advanced reservation is not supported"/>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_106_removing_vlan_uni" time="27.845">
-      <skipped type="pytest.xfail" message="The L2VPN with VLAN 1060 remains up even after removing the VLAN range"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_071_create_l2vpn_with_formatting_issue" time="0.014">
+      <skipped type="pytest.xfail" message="return status 400 - Validation error: Scheduling advanced reservation is not supported"/>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_107_removing_vlan_nni_with_alternate_path" time="27.829">
-      <skipped type="pytest.xfail" message="The L2VPN path associated with VLAN 1070 remains unchanged after modifying the VLAN range to [100–200]"/>
+    <testcase classname="tests.test_06_l2vpn_return_codes.TestE2EReturnCodes" name="test_080_create_l2vpn_with_no_path_available_between_endpoints" time="16.088">
+      <skipped type="pytest.xfail" message="return status 400: Request does not have a valid JSON or body is incomplete/incorrect"/>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_120_l2vpn_provisioning_failure" time="7.803">
-      <skipped type="pytest.xfail" message="EVCs from OXPs where L2VPN creation does not fail are not empty"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_010_edit_l2vpn_vlan" time="85.953">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 201&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b54ba50&gt;
+
+    def test_010_edit_l2vpn_vlan(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        201: L2VPN Service Modified
+        Edit vlan
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        self.payload['endpoints'][0]['vlan'] = "200"
+        self.payload['endpoints'][1]['vlan'] = "200"
+        response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 201
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:65: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_140_create_l2vpn_with_vlan_range" time="12.235"/>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_141_changing_invalid_vlan_range" time="31.716">
-      <skipped type="pytest.xfail" message="Topology after port status not changed after modifying the VLAN range to [1-6000]"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_011_edit_l2vpn_port_id" time="5.852">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 201&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b54ae50&gt;
+
+    def test_011_edit_l2vpn_port_id(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        201: L2VPN Service Modified
+        Edit port_id
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        self.payload['endpoints'][0]['port_id'] = "urn:sdx:port:sax.net:Sax01:50"
+        response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 201
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:76: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_20_use_case_topology.TestE2ETopologyUseCases" name="test_142_create_l2vpn_with_vlan_range_same_items" time="13.819"/>
-    <testcase classname="tests.test_21_use_case_topology.TestE2ETopologyUseCases" name="test_080_link_missing" time="73.458">
-      <skipped type="pytest.xfail" message="L2VPN remains up after a link is removed from topology and no alternate path exists"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_020_edit_l2vpn_with_vlan_integer" time="5.833"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_021_edit_l2vpn_with_vlan_out_of_range" time="5.609"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_022_edit_l2vpn_with_vlan_all" time="5.377">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b54b590&gt;
+
+    def test_022_edit_l2vpn_with_vlan_all(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        400: Request does not have a valid JSON or body is incomplete/incorrect
+        -&gt; Wrong vlan: since one endpoint has the "all" option, all endpoints must have the same value
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        self.payload['endpoints'][0]['vlan'] = "all"
+        self.payload['endpoints'][1]['vlan'] = "any"
+        response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:110: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_21_use_case_topology.TestE2ETopologyUseCases" name="test_081_link_missing_with_alternate_path" time="75.769"/>
-    <testcase classname="tests.test_21_use_case_topology.TestE2ETopologyUseCases" name="test_090_port_missing_uni" time="59.330">
-      <skipped type="pytest.xfail" message="Interface could not be deleted. Reason: There is a flow installed,"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_023_edit_l2vpn_with_missing_vlan" time="5.628">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b549890&gt;
+
+    def test_023_edit_l2vpn_with_missing_vlan(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        400: Request does not have a valid JSON or body is incomplete/incorrect
+        -&gt; Body incomplete: vlan attribute is missing on an endpoint
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN request",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "300"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50"}
+            ]
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:127: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_21_use_case_topology.TestE2ETopologyUseCases" name="test_091_port_missing_nni" time="61.036">
-      <skipped type="pytest.xfail" message="The link status is up after changing the attribute sdx_nni='' on one side"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_024_edit_l2vpn_with_body_incorrect" time="5.584">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b54b150&gt;
+
+    def test_024_edit_l2vpn_with_body_incorrect(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        400: Request does not have a valid JSON or body is incomplete/incorrect
+        -&gt; Body incorrect: port_id
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN request",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath","vlan": "300"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "300"}
+            ]
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:144: AssertionError</failure>
     </testcase>
-    <testcase classname="tests.test_99_topology_big_changes.TestE2ETopologyBigChanges" name="test_040_add_intra_link_check_topology" time="82.911"/>
-    <testcase classname="tests.test_99_topology_big_changes.TestE2ETopologyBigChanges" name="test_050_del_intra_link_check_topology" time="21.167"/>
-    <testcase classname="tests.test_99_topology_big_changes.TestE2ETopologyBigChanges" name="test_070_add_port_check_topology" time="32.097"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_025_edit_l2vpn_with_vlan_negative" time="5.633"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_026_edit_l2vpn_with_missing_name" time="5.588"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_027_edit_l2vpn_with_non_existent_port" time="5.634">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b5499d0&gt;
+
+    def test_027_edit_l2vpn_with_non_existent_port(self):
+        """
+        Test return code for editing L2VPN with a non-existent port ID
+        400: Invalid JSON or incomplete body
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        self.payload['endpoints'][0]['port_id'] = "urn:sdx:port:ampath.net:InvalidPort:50"
+        response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:180: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_028_edit_l2vpn_with_invalid_port_id_format" time="6.151">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b685b90&gt;
+
+    def test_028_edit_l2vpn_with_invalid_port_id_format(self):
+        """
+        Test return code for editing L2VPN with invalid port ID format (incorrect URN format)
+        400: Invalid JSON or incomplete body
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        self.payload['endpoints'][0]['port_id'] = "urn:sdx:port:ampath.net:Ampath3:xyz"
+        response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:190: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_029_edit_l2vpn_with_with_single_endpoint" time="5.771">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b685a10&gt;
+
+    def test_029_edit_l2vpn_with_with_single_endpoint(self):
+        """
+        Test return code for editing L2VPN with with a single endpoint
+        400: Invalid JSON or incomplete body
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN edit with a single endpoint",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": "100"}
+            ]
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:205: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_030_edit_l2vpn_with_p2mp" time="5.686">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 402&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b687310&gt;
+
+    def test_030_edit_l2vpn_with_p2mp(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        402: Request not compatible (For instance, when a L2VPN P2MP is requested but only L2VPN P2P is supported)P2MP
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN request",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50", "vlan": "200"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50", "vlan": "200"},
+                {"port_id": "urn:sdx:port:sax.net:Sax01:50","vlan": "200"}
+            ]
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 402, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 402
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:222: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_040_edit_l2vpn_not_found_id_code404" time="5.356"/>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_050_edit_l2vpn_conflict" time="5.857">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 409&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b684290&gt;
+
+    def test_050_edit_l2vpn_conflict(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        409: Conflicts with a different L2VPN
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        # Create a new l2vpn with similar endpoints to the existing one. Only the vlan varies
+        payload = {
+            "name": "Test L2VPN request",
+            "endpoints": [
+                    {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "500"},
+                    {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "500"}
+            ]
+        }
+        response = requests.post(api_url, json=payload)
+        assert response.status_code == 201, response.text
+    
+        # Edit the first l2pvn to match the newly created one
+        self.payload['endpoints'][0]['vlan'] = "500"
+        self.payload['endpoints'][1]['vlan'] = "500"
+        response = requests.patch(f"{api_url}/{self.key}", json=self.payload)
+&gt;       assert response.status_code == 409, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 409
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:255: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_060_edit_l2vpn_with_min_bw" time="6.035">
+      <skipped type="pytest.xfail" message="status: 500"/>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_061_edit_l2vpn_with_max_delay" time="5.725">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 201&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b686210&gt;
+
+    def test_061_edit_l2vpn_with_max_delay(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        max_delay in range [0-1000]
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN creation with valid bw",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "300"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "300"}
+            ],
+            "qos_metrics": {
+                "max_delay": {
+                    "value": 10
+                }
+            }
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 201
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:298: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_062_edit_l2vpn_with_max_number_oxps" time="5.632">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 201&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b6863d0&gt;
+
+    def test_062_edit_l2vpn_with_max_number_oxps(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        max_number_oxps in [0-100]
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN creation with valid bw",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "300"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "300"}
+            ],
+            "qos_metrics": {
+                "max_number_oxps": {
+                    "value": 10
+                }
+            }
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 201
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:319: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_063_edit_l2vpn_with_min_bw_out_of_range" time="5.605">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b6867d0&gt;
+
+    def test_063_edit_l2vpn_with_min_bw_out_of_range(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        410: Can't fulfill the strict QoS requirements
+        Case: min_bw out of range (value must be in [0-100])
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN creation with valid bw",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "300"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "300"}
+            ],
+            "qos_metrics": {
+                "min_bw": {
+                    "value": 101
+                }
+            }
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:341: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_064_edit_l2vpn_with_max_delay_out_of_range" time="5.914">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b6d7a50&gt;
+
+    def test_064_edit_l2vpn_with_max_delay_out_of_range(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        410: Can't fulfill the strict QoS requirements
+        Case: max_delay out of range (value must be in [0-1000])
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN creation with valid bw",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "300"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "300"}
+            ],
+            "qos_metrics": {
+                "max_delay": {
+                    "value": 1001
+                }
+            }
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:363: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_065_edit_l2vpn_with_max_number_oxps_out_of_range" time="5.794">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 400&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b6d5b10&gt;
+
+    def test_065_edit_l2vpn_with_max_number_oxps_out_of_range(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        410: Can't fulfill the strict QoS requirements
+        Case: max_number_oxps out of range (value must be in [0-100])
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN creation with valid bw",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "300"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "300"}
+            ],
+            "qos_metrics": {
+                "max_number_oxps": {
+                    "value": 101
+                }
+            }
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 400, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 400
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:385: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_066_edit_l2vpn_with_no_available_bw" time="5.856">
+      <failure message="AssertionError: {&#10;    &quot;detail&quot;: &quot;The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.&quot;,&#10;    &quot;status&quot;: 500,&#10;    &quot;title&quot;: &quot;Internal Server Error&quot;,&#10;    &quot;type&quot;: &quot;about:blank&quot;&#10;  }&#10;  &#10;assert 500 == 410&#10; +  where 500 = &lt;Response [500]&gt;.status_code">self = &lt;test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn object at 0x7fc30b686350&gt;
+
+    def test_066_edit_l2vpn_with_no_available_bw(self):
+        """
+        Test the return code for editing a SDX L2VPN
+        410: Can't fulfill the strict QoS requirements
+        """
+        api_url = SDX_CONTROLLER + '/l2vpn/1.0'
+        payload = {
+            "name": "Test L2VPN creation",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "101"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "101"}
+            ],
+            "qos_metrics": {
+                "min_bw": {
+                    "value": 10
+                }
+            }
+        }
+        response = requests.post(api_url, json=payload)
+        assert response.status_code == 201, response.text
+    
+        # Edit high min_bw to get code 410
+        payload = {
+            "name": "Test L2VPN request",
+            "endpoints": [
+                {"port_id": "urn:sdx:port:ampath.net:Ampath3:50","vlan": "100"},
+                {"port_id": "urn:sdx:port:tenet.ac.za:Tenet03:50","vlan": "100"}
+            ],
+            "qos_metrics": {
+                "min_bw": {
+                    "value": 91
+                }
+            }
+        }
+        response = requests.patch(f"{api_url}/{self.key}", json=payload)
+&gt;       assert response.status_code == 410, response.text
+E       AssertionError: {
+E           "detail": "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+E           "status": 500,
+E           "title": "Internal Server Error",
+E           "type": "about:blank"
+E         }
+E         
+E       assert 500 == 410
+E        +  where 500 = &lt;Response [500]&gt;.status_code
+
+tests/test_07_l2vpn_return_codes.py:422: AssertionError</failure>
+    </testcase>
+    <testcase classname="tests.test_07_l2vpn_return_codes.TestE2EReturnCodesEditL2vpn" name="test_070_edit_l2vpn_with_impossible_scheduling" time="6.077">
+      <skipped type="pytest.xfail" message="status: 500"/>
+    </testcase>
+    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_010_list_one_l2vpn" time="79.216"/>
+    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_020_list_one_l2vpn_not_found" time="0.509"/>
+    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_030_list_multiple_l2vpn" time="1.127"/>
+    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_031_list_multiple_l2vpn_multiple_existing" time="0.779"/>
+    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_040_delete_one_l2vpn" time="0.680"/>
+    <testcase classname="tests.test_08_l2vpn_return_codes.TestE2EReturnCodesListL2vpn" name="test_050_delete_one_l2vpn_not_found" time="0.515"/>
+    <testcase classname="tests.test_99_topology_big_changes.TestE2ETopologyBigChanges" name="test_040_add_intra_link_check_topology" time="54.313"/>
+    <testcase classname="tests.test_99_topology_big_changes.TestE2ETopologyBigChanges" name="test_050_del_intra_link_check_topology" time="31.175">
+      <skipped type="pytest.xfail" message="AssertionError: assert 11 == (11 - 1) -&gt; link is not removed in sdx-controller"/>
+    </testcase>
+    <testcase classname="tests.test_99_topology_big_changes.TestE2ETopologyBigChanges" name="test_070_add_port_check_topology" time="32.128"/>
   </testsuite>
 </testsuites>

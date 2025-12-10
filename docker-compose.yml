@@ -2,8 +2,9 @@ services:
   mongo:
     image: mongo:7.0
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     healthcheck:
       test: mongosh --quiet "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@127.0.0.1:27017/?authSource=admin" --eval 'db.runCommand("ping").ok'
       interval: 5s
@@ -12,8 +13,9 @@ services:
   mq1:
     image: rabbitmq:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 5s
@@ -22,13 +24,19 @@ services:
   ampath:
     image: amlight/kytos-sdx:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
       mongo:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8181/api/kytos/core/status || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     entrypoint:
       - "/bin/bash"
       - "-x"
@@ -43,13 +51,19 @@ services:
   sax:
     image: amlight/kytos-sdx:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
       mongo:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8181/api/kytos/core/status || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     entrypoint:
       - "/bin/bash"
       - "-x"
@@ -64,13 +78,19 @@ services:
   tenet:
     image: amlight/kytos-sdx:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
       mongo:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8181/api/kytos/core/status || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     entrypoint:
       - "/bin/bash"
       - "-x"
@@ -85,8 +105,9 @@ services:
   ampath-lc:
     image: awsdx/sdx-lc:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -94,6 +115,11 @@ services:
         condition: service_healthy
       mq1:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     entrypoint:
       - "/bin/bash"
       - "-x"
@@ -108,8 +134,9 @@ services:
   sax-lc:
     image: awsdx/sdx-lc:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -117,6 +144,11 @@ services:
         condition: service_healthy
       mq1:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     entrypoint:
       - "/bin/bash"
       - "-x"
@@ -131,8 +163,9 @@ services:
   tenet-lc:
     image: awsdx/sdx-lc:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -140,6 +173,11 @@ services:
         condition: service_healthy
       mq1:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     entrypoint:
       - "/bin/bash"
       - "-x"
@@ -154,8 +192,9 @@ services:
   sdx-controller:
     image: awsdx/sdx-controller:latest
     pull_policy: always
-    env_file:
-      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - .:/sdx-end-to-end-tests
     depends_on:
@@ -163,6 +202,11 @@ services:
         condition: service_healthy
       mq1:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     entrypoint:
       - "/bin/bash"
       - "-x"
@@ -181,7 +225,6 @@ services:
     volumes:
       - .:/sdx-end-to-end-tests
       - /lib/modules:/lib/modules
-      - ./e2e-output:/tmp
     working_dir: /sdx-end-to-end-tests
     depends_on:
       - ampath
@@ -198,3 +241,17 @@ services:
         apt-get update && apt-get install -y tmux jq python3-pytest python3-requests
         python3 -m pip install -r requirements.txt
         tail -f /dev/null
+  end2end:
+    image: debian:bookworm-slim
+    container_name: end2end
+    healthcheck:
+      disable: true
+    volumes:
+      - ./e2e-output:/tmp
+    entrypoint: >
+      /bin/bash -c "
+      apt-get update &&
+      apt-get install -y python3 python3-pip &&
+      pip3 install pytest requests &&
+      pytest tests/ --junitxml=/tmp/results.xml ||
+      echo 'Pytest run failed'"
