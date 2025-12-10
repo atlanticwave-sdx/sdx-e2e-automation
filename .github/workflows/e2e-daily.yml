@@ -34,6 +34,15 @@ jobs:
     - name: Prune old Docker images (ensure fresh pulls)
       run: docker image prune -a -f || true
 
+    - name: Create .env file for Docker Compose
+      run: |
+        cat << EOF > .env
+        MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+        MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+        RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+        RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
+        EOF
+
     - name: Pull Docker images
       run: docker-compose pull
       env:
@@ -91,6 +100,20 @@ jobs:
           exit 1
         fi
         docker cp $CONTAINER_ID:/tmp/results.xml ./e2e-output/results.xml
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: results
+        path: ./e2e-output/results.xml
+
+    - name: Install Python dependencies for project update
+      run: |
+        if [ -f requirements.txt ]; then
+          pip3 install -r requirements.txt
+        else
+          pip3 install requests
+        fi
 
     - name: Update GitHub Project board
       env:
